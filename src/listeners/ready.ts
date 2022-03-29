@@ -5,6 +5,7 @@ import { ApplyOptions } from '@sapphire/decorators';
   name: 'ready',
   once: true,
 })
+
 export class UserListener extends Listener {
   public run(): void {
     this.container.logger.info('Bot ready');

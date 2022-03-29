@@ -6,7 +6,7 @@
 
 ## **Features:**
 
-- ⚙️ Customizable Ticket System.
+- ⚙️ Customizable ticket system.
 - ✅ Easy to use, easy to learn.
 
 ## **Frameworks/Languages Used:**

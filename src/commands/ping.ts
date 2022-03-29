@@ -1,4 +1,9 @@
-import { ColorResolvable, CommandInteraction, MessageEmbed } from 'discord.js';
+import {
+  ColorResolvable,
+  CommandInteraction,
+  Message,
+  MessageEmbed,
+} from 'discord.js';
 import type { CommandOptions } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@sapphire/framework';
@@ -16,14 +21,22 @@ import colors from '../colors.json';
 
 export class UserCommand extends Command {
   public override async chatInputRun(interaction: CommandInteraction): Promise<void> {
-    const embed: MessageEmbed = new MessageEmbed()
+    const firstEmbed: MessageEmbed = new MessageEmbed()
+      .setTitle('Suta 💫 - Ping')
+      .setTimestamp()
+      .setColor(colors.invisible as ColorResolvable)
+      .setDescription('Thinking...');
+
+    const reply = await interaction.reply({ embeds: [firstEmbed], fetchReply: true }) as Message;
+
+    const finalEmbed: MessageEmbed = new MessageEmbed()
       .setTitle('Suta 💫 - Ping')
       .setTimestamp()
       .setColor(colors.invisible as ColorResolvable)
       .setDescription(`\
-**🏓 API Latency:** \`${this.container.client.ws.ping}ms\`
-**🤖 Latency:** \`${Date.now() - interaction.createdTimestamp}ms\``);
+  **🏓 API Latency:** \`${this.container.client.ws.ping}ms\`
+  **🤖 Bot Latency:** \`${reply.createdTimestamp - interaction.createdTimestamp}ms\``);
 
-    void interaction.reply({ embeds: [embed] });
+    interaction.editReply({ embeds: [finalEmbed] });
   }
 }

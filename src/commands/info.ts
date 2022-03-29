@@ -2,12 +2,12 @@ import Discord, { ColorResolvable, CommandInteraction, MessageEmbed } from 'disc
 import type { CommandOptions } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@sapphire/framework';
-import formatBytes from '../lib/formatBytes';
 import typescript from 'typescript';
-import colors from '../colors.json';
 import si from 'systeminformation';
 import os from 'os';
 import ms from 'ms';
+import colors from '../colors.json';
+import formatBytes from '../lib/formatBytes';
 
 @ApplyOptions<CommandOptions>({
   chatInputCommand: {
@@ -21,8 +21,7 @@ import ms from 'ms';
 
 export class UserCommand extends Command {
   public override async chatInputRun(interaction: CommandInteraction): Promise<void> {
-
-    const memory: NodeJS.MemoryUsage = process.memoryUsage();
+    const memory = process.memoryUsage();
     const cpu = await si.cpu();
 
     const embed: MessageEmbed = new MessageEmbed()

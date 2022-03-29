@@ -1,6 +1,6 @@
 import { LogLevel, SapphireClient } from '@sapphire/framework';
-import { env } from './env';
 import { Intents } from 'discord.js';
+import { env } from './env';
 
 export class UserClient extends SapphireClient {
   public constructor() {

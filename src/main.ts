@@ -1,6 +1,6 @@
-import "@sapphire/plugin-logger/register";
-import { env, UserClient } from "./lib";
-import { container } from "@sapphire/framework";
+import '@sapphire/plugin-logger/register';
+import { container } from '@sapphire/framework';
+import { env, UserClient } from './lib';
 
 (async () => {
   const client = new UserClient();

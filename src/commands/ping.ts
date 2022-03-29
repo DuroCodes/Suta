@@ -16,7 +16,6 @@ import colors from '../colors.json';
 
 export class UserCommand extends Command {
   public override async chatInputRun(interaction: CommandInteraction): Promise<void> {
-
     const embed: MessageEmbed = new MessageEmbed()
       .setTitle('Suta 💫 - Ping')
       .setTimestamp()

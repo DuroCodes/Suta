@@ -7,7 +7,7 @@ import {
 import type { CommandOptions } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@sapphire/framework';
-import colors from '../colors.json';
+import colors from '../../util/colors.json';
 
 @ApplyOptions<CommandOptions>({
   chatInputCommand: {
@@ -21,7 +21,7 @@ import colors from '../colors.json';
 
 export class UserCommand extends Command {
   public override async chatInputRun(interaction: CommandInteraction): Promise<void> {
-    const firstEmbed: MessageEmbed = new MessageEmbed()
+    const firstEmbed = new MessageEmbed()
       .setTitle('Suta 💫 - Ping')
       .setTimestamp()
       .setColor(colors.invisible as ColorResolvable)
@@ -29,7 +29,7 @@ export class UserCommand extends Command {
 
     const reply = await interaction.reply({ embeds: [firstEmbed], fetchReply: true }) as Message;
 
-    const finalEmbed: MessageEmbed = new MessageEmbed()
+    const finalEmbed = new MessageEmbed()
       .setTitle('Suta 💫 - Ping')
       .setTimestamp()
       .setColor(colors.invisible as ColorResolvable)

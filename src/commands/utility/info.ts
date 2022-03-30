@@ -6,8 +6,8 @@ import typescript from 'typescript';
 import si from 'systeminformation';
 import os from 'os';
 import ms from 'ms';
-import colors from '../colors.json';
-import formatBytes from '../lib/formatBytes';
+import colors from '../../util/colors.json';
+import formatBytes from '../../lib/formatBytes';
 
 @ApplyOptions<CommandOptions>({
   chatInputCommand: {
@@ -24,7 +24,7 @@ export class UserCommand extends Command {
     const memory = process.memoryUsage();
     const cpu = await si.cpu();
 
-    const embed: MessageEmbed = new MessageEmbed()
+    const embed = new MessageEmbed()
       .setTitle('Suta 💫 - Developer Info')
       .setColor(colors.invisible as ColorResolvable)
       .addFields(

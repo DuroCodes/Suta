@@ -21,5 +21,6 @@ module.exports = {
     'no-unused-vars': 'off',
     'no-void': 'off',
     'class-methods-use-this': 'off',
+    'no-inner-declarations': 'off',
   },
 };

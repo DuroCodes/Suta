@@ -2,7 +2,7 @@ import { Schema, model } from 'mongoose';
 
 const guildSchema = new Schema({
   guildId: String,
-  ticketAdmin: String,
+  adminRole: String,
   supportRole: String,
   ticketCategories: [
     {

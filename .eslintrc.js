@@ -23,5 +23,6 @@ module.exports = {
     'class-methods-use-this': 'off',
     'no-inner-declarations': 'off',
     'consistent-return': 'off',
+    'no-shadow': 'off',
   },
 };

@@ -4,7 +4,7 @@ import {
 } from 'discord.js';
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@sapphire/framework';
-import guildSchema from '../../schemas/guild';
+import GuildSchema from '../../schemas/guild';
 import colors from '../../util/colors.json';
 import emoji from '../../util/emoji.json';
 
@@ -19,21 +19,12 @@ import emoji from '../../util/emoji.json';
 })
 
 export class UserCommand extends Command {
-  public override registerApplicationCommands(registry: ApplicationCommandRegistry) {
-    registry.registerChatInputCommand({
-      name: this.name,
-      description: this.description,
-      options: [
-      ],
-    });
-  }
-
   public override async chatInputRun(interaction: CommandInteraction): Promise<void> {
     const { guildId } = interaction;
-    const guildData = await guildSchema.findOne({ guildId });
     const { roles } = interaction.member as GuildMember;
     const { permissions } = interaction.member as GuildMember;
-    if (!guildData) guildSchema.create({ guildId });
+    let guildData = await GuildSchema.findOne({ guildId });
+    if (!guildData) guildData = await new GuildSchema({ guildId });
 
     if (!roles.cache.has(guildData?.ticketAdmin) && !permissions.has('ADMINISTRATOR')) {
       return interaction.reply({
@@ -206,5 +197,20 @@ React with ${emoji.wrong} to **cancel**.`);
         }
       });
     }
+  }
+
+  public override registerApplicationCommands(registry: ApplicationCommandRegistry) {
+    registry.registerChatInputCommand({
+      name: this.name,
+      description: this.description,
+      options: [
+        {
+          name: 'category',
+          type: 'STRING',
+          required: true,
+          description: 'The category to add, remove, or edit.',
+        },
+      ],
+    });
   }
 }

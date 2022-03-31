@@ -4,6 +4,7 @@ const guildSchema = new Schema({
   guildId: String,
   adminRole: String,
   supportRole: String,
+  ticketCategory: String,
   ticketCategories: [
     {
       name: String,

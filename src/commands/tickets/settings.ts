@@ -10,6 +10,7 @@ import emoji from '../../util/emoji.json';
 const enum SubCommandGroups {
   SupportRole = 'support-role',
   AdminRole = 'admin-role',
+  Category = 'category',
 }
 
 @ApplyOptions<CommandOptions>({
@@ -73,6 +74,21 @@ export class UserCommand extends Command {
         });
         break;
       }
+      case SubCommandGroups.Category: {
+        const ticketCategory = interaction.options.get(SubCommandGroups.Category)?.value as string;
+        await guildData.updateOne({ ticketCategory });
+        await guildData.save();
+        interaction.reply({
+          embeds: [
+            new MessageEmbed()
+              .setTitle(`${emoji.correct} Ticket Category`)
+              .setColor(colors.invisible as ColorResolvable)
+              .setDescription(`The ticket category has been set to \`${ticketCategory}\`.`),
+          ],
+          ephemeral: true,
+        });
+        break;
+      }
       default:
         break;
     }
@@ -85,10 +101,24 @@ export class UserCommand extends Command {
       .addSubcommand((sub: any) => sub
         .setName(SubCommandGroups.SupportRole)
         .setDescription('Set the support role for the ticket system.')
-        .addRoleOption((role: any) => role.setName(SubCommandGroups.SupportRole).setDescription('The role to use for support tickets.').setRequired(true)))
+        .addRoleOption((role: any) => role
+          .setName(SubCommandGroups.SupportRole)
+          .setDescription('The role to use for support tickets.')
+          .setRequired(true)))
       .addSubcommand((sub: any) => sub
         .setName(SubCommandGroups.AdminRole)
         .setDescription('Set the admin role for the ticket system.')
-        .addRoleOption((role: any) => role.setName(SubCommandGroups.AdminRole).setDescription('The role to use for ticket admins.').setRequired(true))));
+        .addRoleOption((role: any) => role
+          .setName(SubCommandGroups.AdminRole)
+          .setDescription('The role to use for ticket admins.')
+          .setRequired(true)))
+      .addSubcommand((sub: any) => sub
+        .setName(SubCommandGroups.Category)
+        .setDescription('Set the category for the ticket system.')
+        .addChannelOption((option: any) => option
+          .setName(SubCommandGroups.Category)
+          .setDescription('The category to use for tickets.')
+          .setRequired(true)
+          .addChannelTypes([4]))));
   }
 }

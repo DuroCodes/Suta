@@ -73,6 +73,6 @@ export class UserCommand extends Command {
         },
       );
 
-    void interaction.reply({ embeds: [embed] });
+    void interaction.reply({ embeds: [embed], ephemeral: true });
   }
 }

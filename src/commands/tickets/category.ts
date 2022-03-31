@@ -1,6 +1,6 @@
 import type { ApplicationCommandRegistry, CommandOptions } from '@sapphire/framework';
 import {
-  ColorResolvable, CommandInteraction, Message, MessageEmbed, MessageReaction, User,
+  ColorResolvable, CommandInteraction, Message, MessageEmbed, MessageReaction, User, GuildMember,
 } from 'discord.js';
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@sapphire/framework';
@@ -20,33 +20,38 @@ import emoji from '../../util/emoji.json';
 
 export class UserCommand extends Command {
   public override registerApplicationCommands(registry: ApplicationCommandRegistry) {
-    registry.registerChatInputCommand(
-      {
-        name: this.name,
-        description: this.description,
-        options: [
-          {
-            name: 'category',
-            type: 'STRING',
-            required: true,
-            description: 'The category to add, remove, or edit.',
-          },
-        ],
-      },
-    );
+    registry.registerChatInputCommand({
+      name: this.name,
+      description: this.description,
+      options: [
+      ],
+    });
   }
 
   public override async chatInputRun(interaction: CommandInteraction): Promise<void> {
     const { guildId } = interaction;
     const guildData = await guildSchema.findOne({ guildId });
+    const { roles } = interaction.member as GuildMember;
+    const { permissions } = interaction.member as GuildMember;
     if (!guildData) guildSchema.create({ guildId });
+
+    if (!roles.cache.has(guildData?.ticketAdmin) && !permissions.has('ADMINISTRATOR')) {
+      return interaction.reply({
+        embeds: [
+          new MessageEmbed()
+            .setTitle(`${emoji.wrong} You do not have permission to use this command.`)
+            .setColor(colors.invisible as ColorResolvable),
+        ],
+        ephemeral: true,
+      });
+    }
 
     const category = interaction.options.get('category')?.value as string;
     const check = (cat: string) => guildData.ticketCategories.some((c: any) => c.name === cat);
 
     if (check(category)) {
       const embed = new MessageEmbed()
-        .setTitle('Category Confirmation')
+        .setTitle(`${emoji.correct} Category Confirmation`)
         .setColor(colors.invisible as ColorResolvable)
         .setDescription(`\
 Would you like to remove or edit the category \`${category}\`?
@@ -66,7 +71,7 @@ React with ${emoji.wrong} to **cancel**.`);
         await guildData.updateOne({ $pull: { ticketCategories: { name: cat } } });
         await guildData.save();
         const deleted = new MessageEmbed()
-          .setTitle('Category Deleted')
+          .setTitle(`${emoji.delete} Category Deleted`)
           .setColor(colors.invisible as ColorResolvable)
           .setDescription(`Successfully deleted category \`${cat}\``);
         reply.edit({ embeds: [deleted] });
@@ -78,18 +83,15 @@ React with ${emoji.wrong} to **cancel**.`);
         reply.edit({
           embeds: [
             new MessageEmbed()
-              .setTitle('Category Edit')
+              .setTitle(`${emoji.edit} Category Edit`)
               .setColor(colors.invisible as ColorResolvable)
               .setDescription('Type the name you wish the category to be. You have **15 seconds**.'),
           ],
         });
 
-        const messageCollector = reply.channel.createMessageCollector(
-          {
-            filter: editFilter,
-            time: 15000,
-          },
-        );
+        const messageCollector = reply.channel.createMessageCollector({
+          filter: editFilter, time: 15000,
+        });
 
         messageCollector.on('collect', async (m: Message) => {
           if (m.content.length > 0) {
@@ -97,22 +99,36 @@ React with ${emoji.wrong} to **cancel**.`);
             await guildData.updateOne({ $pull: { ticketCategories: { name: cat } } });
             await guildData.updateOne({ $push: { ticketCategories: { name: newName } } });
             await guildData.save();
-            const edited = new MessageEmbed()
-              .setTitle('Category Edited')
-              .setColor(colors.invisible as ColorResolvable)
-              .setDescription(`Changed category name from \`${cat}\` to \`${newName}\``);
-            reply.edit({ embeds: [edited] });
+            reply.edit({
+              embeds: [
+                new MessageEmbed()
+                  .setTitle(`${emoji.edit} Category Edited`)
+                  .setColor(colors.invisible as ColorResolvable)
+                  .setDescription(`Changed category name from \`${cat}\` to \`${newName}\``),
+              ],
+            });
             reply.reactions.removeAll();
           }
         });
-        reply.reactions.removeAll();
+
+        messageCollector.on('end', () => {
+          reply.reactions.removeAll();
+          reply.edit({
+            embeds: [
+              new MessageEmbed()
+                .setTitle(`${emoji.timer} Category Edit`)
+                .setColor(colors.invisible as ColorResolvable)
+                .setDescription('Category edit timed out.'),
+            ],
+          });
+        });
       }
 
       async function cancel() {
         reply.edit({
           embeds: [
             new MessageEmbed()
-              .setTitle('Category Cancelled')
+              .setTitle(`${emoji.wrong} Category Cancelled`)
               .setColor(colors.invisible as ColorResolvable),
           ],
         });
@@ -140,7 +156,8 @@ React with ${emoji.wrong} to **cancel**.`);
       });
     } else {
       const embed = new MessageEmbed()
-        .setTitle('Category Confirmation').setColor(colors.invisible as ColorResolvable)
+        .setTitle(`${emoji.correct} Category Confirmation`)
+        .setColor(colors.invisible as ColorResolvable)
         .setDescription(`\
 Would you like to create the category \`${category}\`?
 React with ${emoji.correct} to **create** the category.
@@ -158,7 +175,7 @@ React with ${emoji.wrong} to **cancel**.`);
         reply.edit({
           embeds: [
             new MessageEmbed()
-              .setTitle('Category Created')
+              .setTitle(`${emoji.correct} Category Created`)
               .setColor(colors.invisible as ColorResolvable),
           ],
         });
@@ -169,7 +186,7 @@ React with ${emoji.wrong} to **cancel**.`);
         reply.edit({
           embeds: [
             new MessageEmbed()
-              .setTitle('Category Cancelled')
+              .setTitle(`${emoji.wrong} Category Cancelled`)
               .setColor(colors.invisible as ColorResolvable),
           ],
         });

@@ -27,7 +27,9 @@ export class UserCommand extends Command {
       .setColor(colors.invisible as ColorResolvable)
       .setDescription('Thinking...');
 
-    const reply = await interaction.reply({ embeds: [firstEmbed], fetchReply: true }) as Message;
+    const reply = await interaction.reply({
+      embeds: [firstEmbed], fetchReply: true, ephemeral: true,
+    }) as Message;
 
     const finalEmbed = new MessageEmbed()
       .setTitle('Suta 💫 - Ping')

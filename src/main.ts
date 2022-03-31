@@ -1,8 +1,8 @@
 import '@sapphire/plugin-logger/register';
 import { container } from '@sapphire/framework';
-import { env, UserClient } from './lib';
 import { connect } from 'mongoose';
 import { bold } from 'chalk';
+import { env, UserClient } from './lib';
 
 export const client = new UserClient();
 

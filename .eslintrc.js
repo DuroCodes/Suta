@@ -24,5 +24,7 @@ module.exports = {
     'no-inner-declarations': 'off',
     'consistent-return': 'off',
     'no-shadow': 'off',
+    'no-useless-return': 'off',
+    'max-len': 'off',
   },
 };

@@ -5,5 +5,8 @@
   "edit": "<:icons_edit:958708046928961577>",
   "delete": "<:icons_delete:958708050250854400>",
   "yellow_dot": "<:icons_dyellow:875710296071757824>",
-  "timer": "<:icons_timer:958789263841968158>"
+  "timer": "<:icons_timer:958789263841968158>",
+  "timeout": "<:icons_timeout:959070260064038954>",
+  "settings": "<:icons_settings:959060570898837554>",
+  "box": "<:icons_box:959069777379356692>"
 }

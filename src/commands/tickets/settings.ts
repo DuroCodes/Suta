@@ -3,11 +3,11 @@ import {
 } from 'discord.js';
 import { ApplicationCommandRegistry, Command, CommandOptions } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
-import guildSchema from '../../schemas/guild';
+import GuildSchema from '../../schemas/guild';
 import colors from '../../util/colors.json';
 import emoji from '../../util/emoji.json';
 
-const enum SubCommandGroups {
+const enum Subcommand {
   SupportRole = 'support-role',
   AdminRole = 'admin-role',
   Category = 'category',
@@ -28,9 +28,8 @@ export class UserCommand extends Command {
     const { guildId } = interaction;
     const { roles } = interaction.member as GuildMember;
     const { permissions } = interaction.member as GuildMember;
-    let guildData = await guildSchema.findOne({ guildId });
-    if (!guildData) await guildSchema.create({ guildId });
-    guildData = await guildSchema.findOne({ guildId });
+    let guildData = await GuildSchema.findOne({ guildId });
+    if (!guildData) guildData = await new GuildSchema({ guildId, ticketCategories: [] });
 
     if (!roles.cache.has(guildData?.ticketAdmin) && !permissions.has('ADMINISTRATOR')) {
       return interaction.reply({
@@ -43,9 +42,9 @@ export class UserCommand extends Command {
       });
     }
 
-    switch (interaction.options.getSubcommand(true) as SubCommandGroups) {
-      case SubCommandGroups.SupportRole: {
-        const supportRole = interaction.options.get(SubCommandGroups.SupportRole)?.value as string;
+    switch (interaction.options.getSubcommand(true) as Subcommand) {
+      case Subcommand.SupportRole: {
+        const supportRole = interaction.options.get(Subcommand.SupportRole)?.value as string;
         await guildData.updateOne({ supportRole });
         await guildData.save();
         interaction.reply({
@@ -55,12 +54,11 @@ export class UserCommand extends Command {
               .setColor(colors.invisible as ColorResolvable)
               .setDescription(`The support role has been set to \`${supportRole}\`.`),
           ],
-          ephemeral: true,
         });
         break;
       }
-      case SubCommandGroups.AdminRole: {
-        const adminRole = interaction.options.get(SubCommandGroups.AdminRole)?.value as string;
+      case Subcommand.AdminRole: {
+        const adminRole = interaction.options.get(Subcommand.AdminRole)?.value as string;
         await guildData.updateOne({ adminRole });
         await guildData.save();
         interaction.reply({
@@ -70,12 +68,11 @@ export class UserCommand extends Command {
               .setColor(colors.invisible as ColorResolvable)
               .setDescription(`The admin role has been set to \`${adminRole}\`.`),
           ],
-          ephemeral: true,
         });
         break;
       }
-      case SubCommandGroups.Category: {
-        const ticketCategory = interaction.options.get(SubCommandGroups.Category)?.value as string;
+      case Subcommand.Category: {
+        const ticketCategory = interaction.options.get(Subcommand.Category)?.value as string;
         await guildData.updateOne({ ticketCategory });
         await guildData.save();
         interaction.reply({
@@ -85,7 +82,6 @@ export class UserCommand extends Command {
               .setColor(colors.invisible as ColorResolvable)
               .setDescription(`The ticket category has been set to \`${ticketCategory}\`.`),
           ],
-          ephemeral: true,
         });
         break;
       }
@@ -95,28 +91,28 @@ export class UserCommand extends Command {
   }
 
   public override registerApplicationCommands(registry: ApplicationCommandRegistry) {
-    registry.registerChatInputCommand((builder: any) => builder
+    registry.registerChatInputCommand((builder) => builder
       .setName(this.name)
       .setDescription(this.description)
-      .addSubcommand((sub: any) => sub
-        .setName(SubCommandGroups.SupportRole)
+      .addSubcommand((sub) => sub
+        .setName(Subcommand.SupportRole)
         .setDescription('Set the support role for the ticket system.')
-        .addRoleOption((role: any) => role
-          .setName(SubCommandGroups.SupportRole)
+        .addRoleOption((role) => role
+          .setName(Subcommand.SupportRole)
           .setDescription('The role to use for support tickets.')
           .setRequired(true)))
-      .addSubcommand((sub: any) => sub
-        .setName(SubCommandGroups.AdminRole)
+      .addSubcommand((sub) => sub
+        .setName(Subcommand.AdminRole)
         .setDescription('Set the admin role for the ticket system.')
-        .addRoleOption((role: any) => role
-          .setName(SubCommandGroups.AdminRole)
+        .addRoleOption((role) => role
+          .setName(Subcommand.AdminRole)
           .setDescription('The role to use for ticket admins.')
           .setRequired(true)))
-      .addSubcommand((sub: any) => sub
-        .setName(SubCommandGroups.Category)
+      .addSubcommand((sub) => sub
+        .setName(Subcommand.Category)
         .setDescription('Set the category for the ticket system.')
-        .addChannelOption((option: any) => option
-          .setName(SubCommandGroups.Category)
+        .addChannelOption((option) => option
+          .setName(Subcommand.Category)
           .setDescription('The category to use for tickets.')
           .setRequired(true)
           .addChannelTypes([4]))));

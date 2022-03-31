@@ -14,7 +14,7 @@
     "rootDir": "./src",
 
     /* The "No" Corner */
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "noImplicitOverride": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,

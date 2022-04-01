@@ -131,7 +131,7 @@ export class UserListener extends Listener {
             new MessageEmbed()
               .setTitle(`${category.emoji} ${interaction.values[0]?.substring(7)} | Ticket`)
               .setColor(colors.invisible as ColorResolvable)
-              .setDescription(`${category.embedDesc.replace('{user}', user) || category.description.replace('{user}', user)}`)
+              .setDescription(`${(category.embedDesc || category.description).replace('{user}', user)}`),
               .setTimestamp(),
           ],
           components: [

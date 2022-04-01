@@ -9,6 +9,7 @@ import emoji from '../../util/emoji.json';
 
 const enum Subcommand {
   SupportRole = 'support-role',
+  MaxTickets = 'max-tickets',
   AdminRole = 'admin-role',
   Category = 'category',
   Menu = 'menu',
@@ -132,6 +133,20 @@ The ticket menu has been updated.
         });
         break;
       }
+      case Subcommand.MaxTickets: {
+        const maxTickets = interaction.options.get(Subcommand.MaxTickets)?.value as number;
+        await guildData.updateOne({ maxTickets });
+        await guildData.save();
+        interaction.reply({
+          embeds: [
+            new MessageEmbed()
+              .setTitle(`${emoji.correct} Max Tickets`)
+              .setColor(colors.invisible as ColorResolvable)
+              .setDescription(`The max tickets has been set to \`${maxTickets}\`.`),
+          ],
+        });
+        break;
+      }
       default:
         break;
     }
@@ -147,6 +162,13 @@ The ticket menu has been updated.
         .addRoleOption((role) => role
           .setName(Subcommand.SupportRole)
           .setDescription('The role to use for support tickets.')
+          .setRequired(true)))
+      .addSubcommand((sub) => sub
+        .setName(Subcommand.MaxTickets)
+        .setDescription('Set the support role for the ticket system.')
+        .addIntegerOption((int) => int
+          .setName(Subcommand.MaxTickets)
+          .setDescription('The maximum number of tickets per person.')
           .setRequired(true)))
       .addSubcommand((sub) => sub
         .setName(Subcommand.AdminRole)

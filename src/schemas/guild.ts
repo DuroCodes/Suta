@@ -5,6 +5,7 @@ const guildSchema = new Schema({
   adminRole: String,
   supportRole: String,
   ticketCategory: String,
+  maxTickets: Number,
   ticketMenu: {
     title: String,
     description: String,
@@ -17,6 +18,16 @@ const guildSchema = new Schema({
     name: String,
     description: String,
     emoji: String,
+  }],
+  tickets: [{
+    creatorId: String,
+    channelId: String,
+    guildId: String,
+    createdAt: String,
+    claimed: Boolean,
+    addedUsers: [{
+      userId: String,
+    }],
   }],
 });
 

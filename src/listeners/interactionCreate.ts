@@ -8,11 +8,6 @@ import { Interaction } from 'discord.js';
 
 export class UserListener extends Listener {
   public run(interaction: Interaction): void {
-    if (interaction.isCommand() || !interaction.guildId) return;
-    if (interaction.isButton()) {
-      if (interaction.customId === 'ticket-create') {
-        interaction.reply('You clicked the create ticket button!');
-      }
-    }
+    if (interaction.isCommand() && !interaction.guildId) return;
   }
 }

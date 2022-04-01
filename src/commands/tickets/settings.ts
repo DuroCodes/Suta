@@ -11,6 +11,7 @@ const enum Subcommand {
   SupportRole = 'support-role',
   AdminRole = 'admin-role',
   Category = 'category',
+  Menu = 'menu',
 }
 
 @ApplyOptions<CommandOptions>({
@@ -29,7 +30,7 @@ export class UserCommand extends Command {
     const { roles } = interaction.member as GuildMember;
     const { permissions } = interaction.member as GuildMember;
     let guildData = await GuildSchema.findOne({ guildId });
-    if (!guildData) guildData = await new GuildSchema({ guildId, ticketCategories: [] });
+    if (!guildData) guildData = await new GuildSchema({ guildId, ticketCategories: [], ticketMenu: {} });
 
     if (!roles.cache.has(guildData?.ticketAdmin) && !permissions.has('ADMINISTRATOR')) {
       return interaction.reply({
@@ -85,6 +86,52 @@ export class UserCommand extends Command {
         });
         break;
       }
+      case Subcommand.Menu: {
+        const title = interaction.options.get('title')?.value as string;
+        const description = interaction.options.get('description')?.value as string;
+        const channel = interaction.options.get('channel')?.value as string;
+        const color = interaction.options.get('color')?.value as string || guildData.ticketMenu.color || colors.invisible;
+        const footer = interaction.options.get('footer')?.value as string;
+        const timestamp = interaction.options.get('timestamp')?.value as boolean || false;
+
+        if (!color.match(/^#?[0-9a-f]{6}$/i)) {
+          return interaction.reply({
+            embeds: [
+              new MessageEmbed()
+                .setTitle(`${emoji.wrong} Invalid Color`)
+                .setColor(colors.invisible as ColorResolvable)
+                .setDescription('The color you provided is not a valid hex color.'),
+            ],
+          });
+        }
+
+        await guildData.updateOne({
+          ticketMenu: {
+            title,
+            description,
+            channel,
+            footer,
+            timestamp,
+            color,
+          },
+        });
+        await guildData.save();
+
+        interaction.reply({
+          embeds: [
+            new MessageEmbed()
+              .setTitle(`${emoji.settings} Ticket Menu`)
+              .setColor(colors.invisible as ColorResolvable)
+              .setDescription(`\
+The ticket menu has been updated.
+**Title:** \`${title}\`
+**Description:** \`${description}\`${footer ? `\n**Footer:** \`${footer}\`` : ''}${timestamp ? `\n**Timestamp:** \`${timestamp}\`` : ''}
+**Color:** \`${color}\`
+**Channel:** \`${channel}\``),
+          ],
+        });
+        break;
+      }
       default:
         break;
     }
@@ -115,6 +162,30 @@ export class UserCommand extends Command {
           .setName(Subcommand.Category)
           .setDescription('The category to use for tickets.')
           .setRequired(true)
-          .addChannelTypes([4]))));
+          .addChannelTypes([4])))
+      .addSubcommand((sub) => sub
+        .setName(Subcommand.Menu)
+        .setDescription('Change the appearance of the ticket menu.')
+        .addStringOption((option) => option
+          .setName('title')
+          .setDescription('The title of the ticket menu.')
+          .setRequired(true))
+        .addChannelOption((option) => option
+          .setName('channel')
+          .setDescription('The channel to send the ticket menu to.')
+          .setRequired(true)
+          .addChannelTypes([0]))
+        .addStringOption((option) => option
+          .setName('description')
+          .setDescription('The description of the ticket menu.'))
+        .addStringOption((option) => option
+          .setName('footer')
+          .setDescription('The footer of the ticket menu.'))
+        .addStringOption((option) => option
+          .setName('color')
+          .setDescription('The color of the ticket menu.'))
+        .addBooleanOption((option) => option
+          .setName('timestamp')
+          .setDescription('Whether or not to show the timestamp of the ticket menu.'))));
   }
 }

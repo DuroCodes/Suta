@@ -28,7 +28,7 @@ export class UserCommand extends Command {
     const { roles } = interaction.member as GuildMember;
     const { permissions } = interaction.member as GuildMember;
     let guildData = await GuildSchema.findOne({ guildId });
-    if (!guildData) guildData = await new GuildSchema({ guildId, ticketCategories: [] });
+    if (!guildData) guildData = await new GuildSchema({ guildId, ticketCategories: [], ticketMenu: {} });
 
     if (!roles.cache.has(guildData?.ticketAdmin) && !permissions.has('ADMINISTRATOR')) {
       return interaction.reply({
@@ -158,7 +158,7 @@ The category has been created.
       interaction.reply({
         embeds: [
           new MessageEmbed()
-            .setTitle(`${emoji.correct} Category Edited`)
+            .setTitle(`${emoji.edit} Category Edited`)
             .setColor(colors.invisible as ColorResolvable)
             .setDescription(`\
 The category \`${oldName}\` has been edited.

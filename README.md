@@ -1,5 +1,6 @@
 # **Suta 💫**
 
+![Suta Logo](assets/logo.png | width=400)
 [![Badge](https://forthebadge.com/images/badges/made-with-typescript.svg)](https://forthebadge.com)
 
 > Suta is a simple, fast, and completely open source ticket bot for Discord.

@@ -19,6 +19,7 @@ const guildSchema = new Schema({
     name: String,
     description: String,
     emoji: String,
+    embedDesc: String,
   }],
   tickets: [{
     creatorId: String,

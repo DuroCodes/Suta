@@ -23,6 +23,7 @@ const enum Subcommand {
   enabled: true,
   name: 'settings',
   fullCategory: ['Tickets'],
+  runIn: ['GUILD_ANY'],
 })
 
 export class UserCommand extends Command {
@@ -31,7 +32,7 @@ export class UserCommand extends Command {
     const { roles } = interaction.member as GuildMember;
     const { permissions } = interaction.member as GuildMember;
     let guildData = await GuildSchema.findOne({ guildId });
-    if (!guildData) guildData = await new GuildSchema({ guildId, ticketCategories: [], ticketMenu: {} });
+    if (!guildData) guildData = await new GuildSchema({ guildId });
 
     if (!roles.cache.has(guildData?.ticketAdmin) && !permissions.has('ADMINISTRATOR')) {
       return interaction.reply({
@@ -94,7 +95,7 @@ export class UserCommand extends Command {
         const color = interaction.options.get('color')?.value as string || guildData.ticketMenu.color || colors.invisible;
         const footer = interaction.options.get('footer')?.value as string;
         const timestamp = interaction.options.get('timestamp')?.value as boolean || false;
-        const showDescription = interaction.options.get('show-description')?.value as boolean || false;
+        const showDescription = interaction.options.get('show-description')?.value as boolean || true;
 
         if (!color.match(/^#?[0-9a-f]{6}$/i)) {
           return interaction.reply({

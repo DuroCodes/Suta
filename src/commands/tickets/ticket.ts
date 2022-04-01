@@ -17,6 +17,7 @@ import { Category } from '../../typings/category';
   enabled: true,
   name: 'ticket',
   fullCategory: ['Tickets'],
+  runIn: ['GUILD_ANY'],
 })
 
 export class UserCommand extends Command {
@@ -25,7 +26,7 @@ export class UserCommand extends Command {
     const { roles } = interaction.member as GuildMember;
     const { permissions } = interaction.member as GuildMember;
     let guildData = await GuildSchema.findOne({ guildId });
-    if (!guildData) guildData = await new GuildSchema({ guildId, ticketCategories: [], ticketMenu: {} });
+    if (!guildData) guildData = await new GuildSchema({ guildId });
 
     async function menu() {
       if (!roles.cache.has(guildData?.ticketAdmin) && !permissions.has('ADMINISTRATOR')) {
@@ -95,9 +96,7 @@ export class UserCommand extends Command {
       const embed = new MessageEmbed()
         .setTitle(title)
         .setColor(color)
-        .setDescription(`\
-${description}
-${guildData.ticketCategories.map((category: Category) => `${category.emoji} - ${category.name}`).join('\n')}`);
+        .setDescription(`${description ? `${description}\n` : ''}${guildData.ticketCategories.map((category: Category) => `${category.emoji} - ${category.name}`).join('\n')}`);
 
       if (footer) embed.setFooter({ text: footer });
       if (timestamp) embed.setTimestamp();

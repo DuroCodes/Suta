@@ -17,6 +17,7 @@ import colors from '../../util/colors.json';
   enabled: true,
   name: 'ping',
   fullCategory: ['Information', 'Utility'],
+  runIn: ['GUILD_ANY'],
 })
 
 export class UserCommand extends Command {

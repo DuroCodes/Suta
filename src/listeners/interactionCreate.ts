@@ -22,7 +22,7 @@ export class UserListener extends Listener {
       if (interaction.customId === 'ticket-close') {
         const { guildId, user, channel } = interaction;
         let guildData = await GuildSchema.findOne({ guildId });
-        if (!guildData) guildData = new GuildSchema({ guildId, ticketCategories: [], ticketMenu: {} });
+        if (!guildData) guildData = new GuildSchema({ guildId });
 
         const { tickets } = guildData;
         const ticket = tickets.find((t: Ticket) => t.creatorId === user.id && t.channelId === interaction.channelId);
@@ -47,7 +47,7 @@ export class UserListener extends Listener {
     if (interaction.isSelectMenu()) {
       const { guildId, user, guild } = interaction;
       let guildData = await GuildSchema.findOne({ guildId });
-      if (!guildData) guildData = new GuildSchema({ guildId, ticketCategories: [], ticketMenu: {} });
+      if (!guildData) guildData = new GuildSchema({ guildId });
 
       const ticketTopics = guildData.ticketCategories.map((category: Category) => `ticket-${category.name}`);
       if (!ticketTopics.includes(interaction.values[0])) return;
@@ -131,7 +131,7 @@ export class UserListener extends Listener {
             new MessageEmbed()
               .setTitle(`${category.emoji} ${interaction.values[0]?.substring(7)} | Ticket`)
               .setColor(colors.invisible as ColorResolvable)
-              .setDescription(`${category.description}`)
+              .setDescription(`${category.embedDesc.replace('{user}', user) || category.description.replace('{user}', user)}`)
               .setTimestamp(),
           ],
           components: [

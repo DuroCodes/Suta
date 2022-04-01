@@ -96,9 +96,8 @@ export class UserCommand extends Command {
         .setTitle(title)
         .setColor(color)
         .setDescription(`\
-  ${description}
-  
-  ${guildData.ticketCategories.map((category: Category) => `${category.emoji} - ${category.name}`).join('\n')}`);
+${description}
+${guildData.ticketCategories.map((category: Category) => `${category.emoji} - ${category.name}`).join('\n')}`);
 
       if (footer) embed.setFooter({ text: footer });
       if (timestamp) embed.setTimestamp();

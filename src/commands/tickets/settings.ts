@@ -94,6 +94,7 @@ export class UserCommand extends Command {
         const color = interaction.options.get('color')?.value as string || guildData.ticketMenu.color || colors.invisible;
         const footer = interaction.options.get('footer')?.value as string;
         const timestamp = interaction.options.get('timestamp')?.value as boolean || false;
+        const showDescription = interaction.options.get('show-description')?.value as boolean || false;
 
         if (!color.match(/^#?[0-9a-f]{6}$/i)) {
           return interaction.reply({
@@ -113,6 +114,7 @@ export class UserCommand extends Command {
             channel,
             footer,
             timestamp,
+            showDescription,
             color,
           },
         });
@@ -126,7 +128,7 @@ export class UserCommand extends Command {
               .setDescription(`\
 The ticket menu has been updated.
 **Title:** \`${title}\`
-**Description:** \`${description}\`${footer ? `\n**Footer:** \`${footer}\`` : ''}${timestamp ? `\n**Timestamp:** \`${timestamp}\`` : ''}
+**Description:** \`${description}\`${footer ? `\n**Footer:** \`${footer}\`` : ''}${timestamp ? `\n**Timestamp:** \`${timestamp}\`` : ''}${!showDescription ? `\n**Show Description:** \`${showDescription}\`` : ''}
 **Color:** \`${color}\`
 **Channel:** \`${channel}\``),
           ],
@@ -206,6 +208,9 @@ The ticket menu has been updated.
         .addStringOption((option) => option
           .setName('color')
           .setDescription('The color of the ticket menu.'))
+        .addBooleanOption((option) => option
+          .setName('show-description')
+          .setDescription('Whether or not to show the description of the ticket menu.'))
         .addBooleanOption((option) => option
           .setName('timestamp')
           .setDescription('Whether or not to show the timestamp of the ticket menu.'))));

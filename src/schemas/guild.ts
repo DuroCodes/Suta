@@ -13,6 +13,7 @@ const guildSchema = new Schema({
     color: String,
     footer: String,
     timestamp: Boolean,
+    showDescription: Boolean,
   },
   ticketCategories: [{
     name: String,

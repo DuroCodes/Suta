@@ -29,7 +29,7 @@ export class UserCommand extends Command {
     if (!guildData) guildData = await new GuildSchema({ guildId });
 
     async function menu() {
-      if (!roles.cache.has(guildData?.ticketAdmin) && !permissions.has('ADMINISTRATOR')) {
+      if (!roles.cache.has(guildData?.adminRole) && !permissions.has('ADMINISTRATOR')) {
         return interaction.reply({
           embeds: [
             new MessageEmbed()

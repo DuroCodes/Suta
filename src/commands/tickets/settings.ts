@@ -34,7 +34,7 @@ export class UserCommand extends Command {
     let guildData = await GuildSchema.findOne({ guildId });
     if (!guildData) guildData = await new GuildSchema({ guildId });
 
-    if (!roles.cache.has(guildData?.ticketAdmin) && !permissions.has('ADMINISTRATOR')) {
+    if (!roles.cache.has(guildData?.adminRole) && !permissions.has('ADMINISTRATOR')) {
       return interaction.reply({
         embeds: [
           new MessageEmbed()

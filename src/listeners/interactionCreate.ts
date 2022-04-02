@@ -1,8 +1,7 @@
 import { Listener, type ListenerOptions } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
 import {
-  CategoryChannel,
-  ColorResolvable, Interaction, MessageActionRow, MessageButton, MessageEmbed, TextChannel,
+  CategoryChannel, ColorResolvable, Interaction, MessageActionRow, MessageButton, MessageEmbed, TextChannel,
 } from 'discord.js';
 import { Category } from '../typings/category';
 import { Ticket } from '../typings/ticket';
@@ -55,8 +54,9 @@ export class UserListener extends Listener {
       const {
         ticketCategories, tickets, maxTickets, supportRole, adminRole, ticketCategory,
       } = guildData;
+      const { channel } = guildData.ticketMenu;
 
-      if (!ticketCategory || !ticketCategories || !maxTickets || !supportRole || !adminRole) {
+      if (!ticketCategory || !ticketCategories || !maxTickets || !supportRole || !adminRole || !channel) {
         return interaction.reply({
           embeds: [
             new MessageEmbed()
@@ -66,6 +66,10 @@ export class UserListener extends Listener {
           ],
         });
       }
+
+      const menuChannel = interaction.channel as TextChannel;
+      const menuMessage = await menuChannel?.messages.fetch(interaction.message.id);
+      menuMessage.edit({ components: menuMessage.components });
 
       const occurances = tickets.filter((ticket: Ticket) => ticket.creatorId === user.id).length;
       if (occurances >= maxTickets) {
@@ -95,7 +99,7 @@ export class UserListener extends Listener {
 
       await ticketCat.createChannel(`ticket-${user.username}`, {
         type: 'GUILD_TEXT',
-        topic: `${user.username}'s Ticket. To close, use \`/close\``,
+        topic: `${user.username}'s Ticket. To close, use /ticket close`,
         reason: 'Suta | Ticket Creation',
         permissionOverwrites: [
           {
@@ -126,24 +130,47 @@ export class UserListener extends Listener {
           ephemeral: true,
         });
 
-        newChannel.send({
-          embeds: [
-            new MessageEmbed()
-              .setTitle(`${category.emoji} ${interaction.values[0]?.substring(7)} | Ticket`)
-              .setColor(colors.invisible as ColorResolvable)
-              .setDescription(`${(category.embedDesc || category.description).replace('{user}', user)}`)
-              .setTimestamp(),
-          ],
-          components: [
-            new MessageActionRow().addComponents(
-              new MessageButton()
-                .setCustomId('ticket-close')
-                .setEmoji('🔒')
-                .setLabel('Close Ticket')
-                .setStyle('DANGER'),
-            ),
-          ],
-        });
+        if (category.ticketText) {
+          newChannel.send({
+            content: category.ticketText.replace('{user}', user),
+            embeds: [
+              new MessageEmbed()
+                .setTitle(`${category.emoji} ${interaction.values[0]?.substring(7)} | Ticket`)
+                .setColor(colors.invisible as ColorResolvable)
+                .setDescription(`${(category.embedDesc || category.description).replace('{user}', user)}`)
+                .setTimestamp(),
+            ],
+            components: [
+              new MessageActionRow().addComponents(
+                new MessageButton()
+                  .setCustomId('ticket-close')
+                  .setLabel('Close Ticket')
+                  .setStyle('DANGER')
+                  .setEmoji('🔒'),
+              ),
+            ],
+          });
+        } else {
+          newChannel.send({
+            embeds: [
+              new MessageEmbed()
+                .setTitle(`${category.emoji} ${interaction.values[0]?.substring(7)} | Ticket`)
+                .setColor(colors.invisible as ColorResolvable)
+                .setDescription(`${(category.embedDesc || category.description).replace('{user}', user)}`)
+                .setTimestamp(),
+            ],
+            components: [
+              new MessageActionRow().addComponents(
+                new MessageButton()
+                  .setCustomId('ticket-close')
+                  .setLabel('Close Ticket')
+                  .setStyle('DANGER')
+                  .setEmoji('🔒'),
+              ),
+            ],
+          });
+        }
+
         await tickets.push({
           creatorId: user.id,
           channelId: newChannel.id,

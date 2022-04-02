@@ -62,7 +62,7 @@ export class UserListener extends Listener {
             new MessageEmbed()
               .setTitle(`${emoji.wrong} Ticket System Error.`)
               .setColor(colors.invisible as ColorResolvable)
-              .setDescription('The ticket system. Use `/settings` to set it up.'),
+              .setDescription('The ticket system is not setup. Use `/settings` to set it up.'),
           ],
         });
       }

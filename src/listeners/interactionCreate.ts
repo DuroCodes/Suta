@@ -64,6 +64,7 @@ export class UserListener extends Listener {
               .setColor(colors.invisible as ColorResolvable)
               .setDescription('The ticket system is not setup. Use `/settings` to set it up.'),
           ],
+          ephemeral: true,
         });
       }
 

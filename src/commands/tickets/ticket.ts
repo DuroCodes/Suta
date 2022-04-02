@@ -40,6 +40,17 @@ export class UserCommand extends Command {
         });
       }
 
+      if (guildData.ticketCategories.length < 1) {
+        return interaction.reply({
+          embeds: [
+            new MessageEmbed()
+              .setTitle(`${emoji.wrong} You need to set up ticket categories first.`)
+              .setColor(colors.invisible as ColorResolvable),
+          ],
+          ephemeral: true,
+        });
+      }
+
       const {
         title, description, channel, color, footer, timestamp,
       } = guildData.ticketMenu;

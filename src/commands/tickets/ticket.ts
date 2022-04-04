@@ -127,6 +127,7 @@ export class UserCommand extends Command {
               .setTitle(`${emoji.wrong} You do not have permission to use this command.`)
               .setColor(colors.invisible as ColorResolvable),
           ],
+          ephemeral: true,
         });
       }
 
@@ -151,6 +152,7 @@ export class UserCommand extends Command {
               .setTitle(`${emoji.wrong} This user is already been added to the ticket.`)
               .setColor(colors.invisible as ColorResolvable),
           ],
+          ephemeral: true,
         });
       }
 
@@ -170,6 +172,135 @@ export class UserCommand extends Command {
       });
     }
 
+    async function remove(user: User) {
+      if (!roles.cache.has(guildData?.supportRole) && !permissions.has('ADMINISTRATOR')) {
+        return interaction.reply({
+          embeds: [
+            new MessageEmbed()
+              .setTitle(`${emoji.wrong} You do not have permission to use this command.`)
+              .setColor(colors.invisible as ColorResolvable),
+          ],
+          ephemeral: true,
+        });
+      }
+
+      const { tickets } = guildData;
+
+      if (!tickets.find((t: Ticket) => t.channelId === interaction.channelId)) {
+        return interaction.reply({
+          embeds: [
+            new MessageEmbed()
+              .setTitle(`${emoji.wrong} This is not a ticket channel.`)
+              .setColor(colors.invisible as ColorResolvable),
+          ],
+          ephemeral: true,
+        });
+      }
+
+      const ticket = tickets.find((t: Ticket) => t.channelId === interaction.channelId);
+      if (!ticket.addedUsers.includes(user.id)) {
+        return interaction.reply({
+          embeds: [
+            new MessageEmbed()
+              .setTitle(`${emoji.wrong} This user is not in this ticket.`)
+              .setColor(colors.invisible as ColorResolvable),
+          ],
+          ephemeral: true,
+        });
+      }
+
+      ticket.addedUsers.pull((user.id).toString());
+      await guildData.save();
+
+      const channel = interaction?.channel as TextChannel;
+      channel.permissionOverwrites.delete(user);
+
+      return interaction.reply({
+        embeds: [
+          new MessageEmbed()
+            .setTitle(`${emoji.correct} Removed User`)
+            .setColor(colors.invisible as ColorResolvable)
+            .setDescription(`${user} has been removed from the ticket.`),
+        ],
+      });
+    }
+
+    async function claim() {
+      const { tickets } = guildData;
+      const ticket = tickets.find((t: Ticket) => t.channelId === interaction.channelId);
+
+      if (!ticket) {
+        return interaction.reply({
+          embeds: [
+            new MessageEmbed()
+              .setTitle(`${emoji.wrong} This is not a ticket channel.`)
+              .setColor(colors.invisible as ColorResolvable),
+          ],
+          ephemeral: true,
+        });
+      }
+
+      if (ticket.claimed) {
+        return interaction.reply({
+          embeds: [
+            new MessageEmbed()
+              .setTitle(`${emoji.wrong} This ticket has already been claimed.`)
+              .setColor(colors.invisible as ColorResolvable),
+          ],
+          ephemeral: true,
+        });
+      }
+
+      ticket.claimed = true;
+      await guildData.save();
+
+      return interaction.reply({
+        embeds: [
+          new MessageEmbed()
+            .setTitle(`${emoji.correct} Ticket Claimed`)
+            .setColor(colors.invisible as ColorResolvable),
+        ],
+      });
+    }
+
+    async function unclaim() {
+      const { tickets } = guildData;
+      const ticket = tickets.find((t: Ticket) => t.channelId === interaction.channelId);
+
+      if (!ticket) {
+        return interaction.reply({
+          embeds: [
+            new MessageEmbed()
+              .setTitle(`${emoji.wrong} This is not a ticket channel.`)
+              .setColor(colors.invisible as ColorResolvable),
+          ],
+          ephemeral: true,
+        });
+      }
+
+      if (!ticket.claimed) {
+        return interaction.reply({
+          embeds: [
+            new MessageEmbed()
+              .setTitle(`${emoji.wrong} This ticket is not claimed.`)
+              .setColor(colors.invisible as ColorResolvable),
+          ],
+          ephemeral: true,
+        });
+      }
+
+      ticket.claimed = false;
+      await guildData.save();
+
+      return interaction.reply({
+        embeds: [
+          new MessageEmbed()
+            .setTitle(`${emoji.correct} Ticket Unclaimed`)
+            .setColor(colors.invisible as ColorResolvable),
+        ],
+      });
+    }
+
     switch (interaction.options.getSubcommand(true)) {
       case 'menu': {
         menu();
@@ -181,12 +312,16 @@ export class UserCommand extends Command {
         break;
       }
       case 'remove': {
+        const user = interaction.options.getUser('user');
+        remove(user as User);
         break;
       }
       case 'claim': {
+        claim();
         break;
       }
       case 'unclaim': {
+        unclaim();
         break;
       }
       case 'close': {
@@ -221,6 +356,12 @@ export class UserCommand extends Command {
         .addUserOption((user) => user
           .setName('user')
           .setDescription('The user to remove from the ticket.')
-          .setRequired(true))));
+          .setRequired(true)))
+      .addSubcommand((sub) => sub
+        .setName('claim')
+        .setDescription('Claim the ticket.'))
+      .addSubcommand((sub) => sub
+        .setName('unclaim')
+        .setDescription('Unclaim the ticket.')));
   }
 }

@@ -28,9 +28,7 @@ const guildSchema = new Schema({
     guildId: String,
     createdAt: String,
     claimed: Boolean,
-    addedUsers: [{
-      userId: String,
-    }],
+    addedUsers: [String],
   }],
 });
 

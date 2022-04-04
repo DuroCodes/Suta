@@ -1,5 +1,5 @@
 import {
-  ColorResolvable, CommandInteraction, Guild, GuildMember, MessageActionRow, MessageEmbed, MessageSelectMenu, TextChannel,
+  ColorResolvable, CommandInteraction, Guild, GuildMember, MessageActionRow, MessageEmbed, MessageSelectMenu, TextChannel, User,
 } from 'discord.js';
 import type { ApplicationCommandRegistry, CommandOptions } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
@@ -8,6 +8,7 @@ import GuildSchema from '../../schemas/guild';
 import colors from '../../util/colors.json';
 import emoji from '../../util/emoji.json';
 import { Category } from '../../typings/category';
+import { Ticket } from '../../typings/ticket';
 
 @ApplyOptions<CommandOptions>({
   chatInputCommand: {
@@ -118,9 +119,80 @@ export class UserCommand extends Command {
       });
     }
 
+    async function add(user: User) {
+      if (!roles.cache.has(guildData?.supportRole) && !permissions.has('ADMINISTRATOR')) {
+        return interaction.reply({
+          embeds: [
+            new MessageEmbed()
+              .setTitle(`${emoji.wrong} You do not have permission to use this command.`)
+              .setColor(colors.invisible as ColorResolvable),
+          ],
+        });
+      }
+
+      const { tickets } = guildData;
+
+      if (!tickets.find((t: Ticket) => t.channelId === interaction.channelId)) {
+        return interaction.reply({
+          embeds: [
+            new MessageEmbed()
+              .setTitle(`${emoji.wrong} This is not a ticket channel.`)
+              .setColor(colors.invisible as ColorResolvable),
+          ],
+          ephemeral: true,
+        });
+      }
+
+      const ticket = tickets.find((t: Ticket) => t.channelId === interaction.channelId);
+      if (ticket.addedUsers.includes(user.id)) {
+        return interaction.reply({
+          embeds: [
+            new MessageEmbed()
+              .setTitle(`${emoji.wrong} This user is already been added to the ticket.`)
+              .setColor(colors.invisible as ColorResolvable),
+          ],
+        });
+      }
+
+      ticket.addedUsers.push((user.id).toString());
+      await guildData.save();
+
+      const channel = interaction?.channel as TextChannel;
+      channel.permissionOverwrites.create(user, { VIEW_CHANNEL: true });
+
+      return interaction.reply({
+        embeds: [
+          new MessageEmbed()
+            .setTitle(`${emoji.correct} Added User`)
+            .setColor(colors.invisible as ColorResolvable)
+            .setDescription(`${user} has been added to the ticket.`),
+        ],
+      });
+    }
+
     switch (interaction.options.getSubcommand(true)) {
       case 'menu': {
         menu();
+        break;
+      }
+      case 'add': {
+        const user = interaction.options.getUser('user');
+        add(user as User);
+        break;
+      }
+      case 'remove': {
+        break;
+      }
+      case 'claim': {
+        break;
+      }
+      case 'unclaim': {
+        break;
+      }
+      case 'close': {
+        break;
+      }
+      case 'rename': {
         break;
       }
       default: {
@@ -135,6 +207,20 @@ export class UserCommand extends Command {
       .setDescription(this.description)
       .addSubcommand((sub) => sub
         .setName('menu')
-        .setDescription('Create a ticket creation menu.')));
+        .setDescription('Create a ticket creation menu.'))
+      .addSubcommand((sub) => sub
+        .setName('add')
+        .setDescription('Add a user to the current ticket')
+        .addUserOption((user) => user
+          .setName('user')
+          .setDescription('The user to add to the ticket.')
+          .setRequired(true)))
+      .addSubcommand((sub) => sub
+        .setName('remove')
+        .setDescription('Remove a user from the ticket.')
+        .addUserOption((user) => user
+          .setName('user')
+          .setDescription('The user to remove from the ticket.')
+          .setRequired(true))));
   }
 }

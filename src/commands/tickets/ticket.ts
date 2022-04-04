@@ -301,6 +301,55 @@ export class UserCommand extends Command {
       });
     }
 
+    async function rename(name: string) {
+      const { tickets } = guildData;
+      const ticket = tickets.find((t: Ticket) => t.channelId === interaction.channelId);
+
+      if (!ticket) {
+        return interaction.reply({
+          embeds: [
+            new MessageEmbed()
+              .setTitle(`${emoji.wrong} This is not a ticket channel.`)
+              .setColor(colors.invisible as ColorResolvable),
+          ],
+          ephemeral: true,
+        });
+      }
+
+      const channel = interaction.channel as TextChannel;
+      channel.setName(name, 'Suta 💫 | Ticket Renamed');
+
+      return interaction.reply({
+        embeds: [
+          new MessageEmbed()
+            .setTitle(`${emoji.correct} Ticket Renamed`)
+            .setColor(colors.invisible as ColorResolvable)
+            .setDescription(`The ticket has been renamed to \`${name}\``),
+        ],
+      });
+    }
+
+    async function close() {
+      const { tickets } = guildData;
+      const ticket = tickets.find((t: Ticket) => t.channelId === interaction.channelId);
+      if (!ticket) {
+        return interaction.reply({
+          embeds: [
+            new MessageEmbed()
+              .setTitle(`${emoji.wrong} This is not a ticket channel.`)
+              .setColor(colors.invisible as ColorResolvable),
+          ],
+          ephemeral: true,
+        });
+      }
+
+      guildData.tickets.pull(ticket);
+      await guildData.save();
+
+      const channel = interaction.channel as TextChannel;
+      channel.delete('Suta 💫 | Ticket Closed');
+    }
+
     switch (interaction.options.getSubcommand(true)) {
       case 'menu': {
         menu();
@@ -324,10 +373,13 @@ export class UserCommand extends Command {
         unclaim();
         break;
       }
-      case 'close': {
+      case 'rename': {
+        const name = interaction.options.getString('name') as string;
+        rename(name);
         break;
       }
-      case 'rename': {
+      case 'close': {
+        close();
         break;
       }
       default: {
@@ -362,6 +414,16 @@ export class UserCommand extends Command {
         .setDescription('Claim the ticket.'))
       .addSubcommand((sub) => sub
         .setName('unclaim')
-        .setDescription('Unclaim the ticket.')));
+        .setDescription('Unclaim the ticket.'))
+      .addSubcommand((sub) => sub
+        .setName('rename')
+        .setDescription('Rename the ticket.')
+        .addStringOption((string) => string
+          .setName('name')
+          .setDescription('The new name for the ticket.')
+          .setRequired(true)))
+      .addSubcommand((sub) => sub
+        .setName('close')
+        .setDescription('Close the ticket.')));
   }
 }

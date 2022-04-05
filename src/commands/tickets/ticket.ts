@@ -202,7 +202,7 @@ export class UserCommand extends Command {
         return interaction.reply({
           embeds: [
             new MessageEmbed()
-              .setTitle(`${emoji.wrong} This user is not in this ticket.`)
+              .setTitle(`${emoji.wrong} This user is not added to this ticket.`)
               .setColor(colors.invisible as ColorResolvable),
           ],
           ephemeral: true,

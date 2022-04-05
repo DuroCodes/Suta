@@ -255,7 +255,7 @@ export class UserCommand extends Command {
       await guildData.save();
 
       const channel = interaction?.channel as TextChannel;
-      channel.permissionOverwrites.create(guildData.supportRole, {
+      channel.permissionOverwrites.edit(guildData.supportRole, {
         VIEW_CHANNEL: false,
       });
 
@@ -298,7 +298,7 @@ export class UserCommand extends Command {
       await guildData.save();
 
       const channel = interaction?.channel as TextChannel;
-      channel.permissionOverwrites.create(guildData.supportRole, {
+      channel.permissionOverwrites.edit(guildData.supportRole, {
         VIEW_CHANNEL: true,
       });
 

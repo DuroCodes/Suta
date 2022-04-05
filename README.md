@@ -10,7 +10,6 @@
 
 - Customizable ticket system. ⚙️
 - Easy to use, easy to learn. 💪
-- Documentation on commands and how to use them. 📚
 
 ## **Notes:**
 

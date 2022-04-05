@@ -4,9 +4,6 @@
   "main": "./src/main.ts",
   "license": "MIT",
   "scripts": {
-    "lint:fix": "eslint src/ --fix --ext .ts --cache",
-    "lint:err": " eslint src/ --ext .ts --cache",
-    "build": "tsc -b -w src",
     "start": "tsc && ts-node src/main.ts"
   },
   "dependencies": {

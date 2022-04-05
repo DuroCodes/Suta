@@ -5,7 +5,8 @@
 [![Badge](assets/badge.svg)](https://forthebadge.com)
 
 > Suta is a simple, fast, and completely open source ticket bot for Discord. 💫
-> Invite Suta [here](https://discord.com/api/oauth2/authorize?client_id=958173449338093578&permissions=2096&scope=bot%20applications.commands)
+\
+> Invite Suta [here](https://discord.com/api/oauth2/authorize?client_id=958173449338093578&permissions=8&scope=bot%20applications.commands)
 
 ## **Features:**
 

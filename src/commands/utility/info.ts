@@ -54,7 +54,7 @@ export class UserCommand extends Command {
           value: `\
 **Model:** ${cpu.manufacturer} ${cpu.brand}
 **Cores:** ${cpu.cores}
-**Speed:** ${cpu.speed} MHz`,
+**Speed:** ${cpu.speed} GHz`,
           inline: true,
         },
         {

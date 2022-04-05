@@ -4,7 +4,5 @@ export type Ticket = {
   guildId: string,
   createdAt: string,
   claimed: boolean,
-  addedUsers: [{
-    userId: string,
-  }],
+  addedUsers: string[],
 };

@@ -254,6 +254,11 @@ export class UserCommand extends Command {
       ticket.claimed = true;
       await guildData.save();
 
+      const channel = interaction?.channel as TextChannel;
+      channel.permissionOverwrites.create(guildData.supportRole, {
+        VIEW_CHANNEL: false,
+      });
+
       return interaction.reply({
         embeds: [
           new MessageEmbed()
@@ -291,6 +296,11 @@ export class UserCommand extends Command {
 
       ticket.claimed = false;
       await guildData.save();
+
+      const channel = interaction?.channel as TextChannel;
+      channel.permissionOverwrites.create(guildData.supportRole, {
+        VIEW_CHANNEL: true,
+      });
 
       return interaction.reply({
         embeds: [

@@ -22,8 +22,10 @@
 ## **Installation:**
 
 1. Clone the repository. 📂
-2. Install the dependencies using `npm i`. 📦
-3. Run `npm run start` or `tsc && ts-node src/main.ts`. 🏁
+2. Rename `.env.example` to `.env` and add your information. 📝
+3. Go to `/src/util/emoji.json` and add your own emojis. 💖
+4. Install the dependencies using `npm i`. 📦
+5. Run `npm run start` or `tsc && ts-node src/main.ts`. 🏁
 
 ## **Frameworks/Languages Used:**
 

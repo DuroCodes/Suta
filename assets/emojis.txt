@@ -1,0 +1,7 @@
+Correct Icon: https://cdn.discordapp.com/emojis/958708040163532870.png
+Wrong Icon: https://cdn.discordapp.com/emojis/958708043565113405.png
+Delete Icon: https://cdn.discordapp.com/emojis/958708050250854400.png
+Edit Icon: https://cdn.discordapp.com/emojis/958708046928961577.png
+Settings Icon: https://cdn.discordapp.com/emojis/959060570898837554.png
+Box Icon: https://cdn.discordapp.com/emojis/959069777379356692.png
+Ticket Icon: https://cdn.discordapp.com/emojis/959283470188818513.png

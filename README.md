@@ -24,6 +24,7 @@
 1. Clone the repository. 📂
 2. Rename `.env.example` to `.env` and add your information. 📝
 3. Go to `/src/util/emoji.json` and add your own emojis. 💖
+   - Emoji files are in `assets/emojis.txt`.
 4. Install the dependencies using `npm i`. 📦
 5. Run `npm run start` or `tsc && ts-node src/main.ts`. 🏁
 
@@ -33,3 +34,5 @@
 - **[Discord.js](https://www.discord.js.org/)** 📱
 - **[Sapphire](https://npmjs.com/package/@sapphire/framework)** 💎
 - **[Mongoose](https://mongoosejs.com)** 💿
+
+> Special thanks to the [icons discord server](https://discord.gg/aPvvhefmt3) for their awesome emojis. ❤️

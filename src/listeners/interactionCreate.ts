@@ -133,12 +133,12 @@ export class UserListener extends Listener {
 
         if (category.ticketText) {
           newChannel.send({
-            content: category.ticketText.replace('{user}', user),
+            content: category.ticketText.replace('{user}', user).replace('\n', '\\n'),
             embeds: [
               new MessageEmbed()
                 .setTitle(`${category.emoji} ${interaction.values[0]?.substring(7)} | Ticket`)
                 .setColor(colors.invisible as ColorResolvable)
-                .setDescription(`${(category.embedDesc || category.description).replace('{user}', user)}`)
+                .setDescription(`${(category.embedDesc || category.description).replace('{user}', user).replace('\n', '\\n')}`)
                 .setTimestamp(),
             ],
             components: [
@@ -157,7 +157,7 @@ export class UserListener extends Listener {
               new MessageEmbed()
                 .setTitle(`${category.emoji} ${interaction.values[0]?.substring(7)} | Ticket`)
                 .setColor(colors.invisible as ColorResolvable)
-                .setDescription(`${(category.embedDesc || category.description).replace('{user}', user)}`)
+                .setDescription(`${(category.embedDesc || category.description).replace('{user}', user).replace('\n', '\\n')}`)
                 .setTimestamp(),
             ],
             components: [

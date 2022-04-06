@@ -1,7 +1,7 @@
 import { Listener, type ListenerOptions } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
 import {
-  CategoryChannel, ColorResolvable, Interaction, MessageActionRow, MessageButton, MessageEmbed, TextChannel,
+  CategoryChannel, ColorResolvable, Interaction, MessageActionRow, MessageButton, MessageEmbed, TextChannel, Guild,
 } from 'discord.js';
 import { Category } from '../typings/category';
 import { Ticket } from '../typings/ticket';
@@ -39,6 +39,21 @@ export class UserListener extends Listener {
 
         tickets.pull(ticket);
         await guildData.save();
+
+        if (guildData.loggingEnabled && guildData.loggingChannel) {
+          const guild = interaction.guild as Guild;
+          const loggingChannel = guild.channels.cache.get(guildData.loggingChannel);
+          if (loggingChannel instanceof TextChannel) {
+            const embed = new MessageEmbed()
+              .setTitle(`${emoji.ticket} Ticket Closed`)
+              .setColor(colors.invisible as ColorResolvable)
+              .setDescription(`${user} closed the ticket \`${(channel as TextChannel).name}\`.`)
+              .setTimestamp();
+
+            await loggingChannel.send({ embeds: [embed] });
+          }
+        }
+
         channel?.delete('Suta | Closed Ticket');
       }
     }
@@ -181,6 +196,20 @@ export class UserListener extends Listener {
           addedUsers: [],
         });
         await guildData.save();
+
+        if (guildData.loggingEnabled && guildData.loggingChannel) {
+          const guild = interaction.guild as Guild;
+          const loggingChannel = guild.channels.cache.get(guildData.loggingChannel);
+          if (loggingChannel instanceof TextChannel) {
+            const embed = new MessageEmbed()
+              .setTitle(`${emoji.ticket} Ticket Opened`)
+              .setColor(colors.invisible as ColorResolvable)
+              .setDescription(`${user} opened a ticket, ${newChannel}.`)
+              .setTimestamp();
+
+            await loggingChannel.send({ embeds: [embed] });
+          }
+        }
       });
     }
   }

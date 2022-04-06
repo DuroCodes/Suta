@@ -6,6 +6,8 @@ const guildSchema = new Schema({
   supportRole: String,
   ticketCategory: String,
   maxTickets: Number,
+  loggingEnabled: Boolean,
+  loggingChannel: String,
   ticketMenu: {
     title: String,
     description: String,

@@ -13,6 +13,7 @@ const enum Subcommand {
   AdminRole = 'admin-role',
   Category = 'category',
   Menu = 'menu',
+  Logs = 'logs',
 }
 
 @ApplyOptions<CommandOptions>({
@@ -150,6 +151,26 @@ The ticket menu has been updated.
         });
         break;
       }
+      case Subcommand.Logs: {
+        const loggingChannel = interaction.options.get('channel')?.value as string;
+        const loggingEnabled = interaction.options.get('enabled')?.value as boolean;
+        await guildData.updateOne({
+          loggingChannel,
+          loggingEnabled,
+        });
+        await guildData.save();
+        interaction.reply({
+          embeds: [
+            new MessageEmbed()
+              .setTitle(`${emoji.settings} Logging`)
+              .setColor(colors.invisible as ColorResolvable)
+              .setDescription(`\
+The logging channel has been set to \`${loggingChannel}\`.
+**Enabled:** \`${loggingEnabled}\``),
+          ],
+        });
+        break;
+      }
       default:
         break;
     }
@@ -159,6 +180,18 @@ The ticket menu has been updated.
     registry.registerChatInputCommand((builder) => builder
       .setName(this.name)
       .setDescription(this.description)
+      .addSubcommand((logs) => logs
+        .setName('logs')
+        .setDescription('Set options for the logging system.')
+        .addBooleanOption((bol) => bol
+          .setName('enabled')
+          .setDescription('Enable logging.')
+          .setRequired(true))
+        .addChannelOption((cha) => cha
+          .setName('channel')
+          .setDescription('The channel to log to.')
+          .setRequired(true)
+          .addChannelTypes([0])))
       .addSubcommand((sub) => sub
         .setName(Subcommand.SupportRole)
         .setDescription('Set the support role for the ticket system.')

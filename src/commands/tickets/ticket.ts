@@ -356,6 +356,20 @@ export class UserCommand extends Command {
       guildData.tickets.pull(ticket);
       await guildData.save();
 
+      if (guildData.loggingEnabled && guildData.loggingChannel) {
+        const guild = interaction.guild as Guild;
+        const loggingChannel = guild.channels.cache.get(guildData.loggingChannel);
+        if (loggingChannel instanceof TextChannel) {
+          const embed = new MessageEmbed()
+            .setTitle(`${emoji.ticket} Ticket Closed`)
+            .setColor(colors.invisible as ColorResolvable)
+            .setDescription(`${interaction.user} closed the ticket \`${(interaction.channel as TextChannel).name}\`.`)
+            .setTimestamp();
+
+          await loggingChannel.send({ embeds: [embed] });
+        }
+      }
+
       const channel = interaction.channel as TextChannel;
       channel.delete('Suta 💫 | Ticket Closed');
     }

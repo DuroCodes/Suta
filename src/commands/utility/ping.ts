@@ -37,8 +37,8 @@ export class UserCommand extends Command {
       .setTimestamp()
       .setColor(colors.invisible as ColorResolvable)
       .setDescription(`\
-  **🏓 API Latency:** \`${this.container.client.ws.ping}ms\`
-  **🤖 Bot Latency:** \`${reply.createdTimestamp - interaction.createdTimestamp}ms\``);
+**🏓 API Latency:** \`${this.container.client.ws.ping}ms\`
+**🤖 Bot Latency:** \`${reply.createdTimestamp - interaction.createdTimestamp}ms\``);
 
     interaction.editReply({ embeds: [finalEmbed] });
   }

@@ -154,11 +154,6 @@ The ticket menu has been updated.
       case Subcommand.Logs: {
         const loggingChannel = interaction.options.get('channel')?.value as string;
         const loggingEnabled = interaction.options.get('enabled')?.value as boolean;
-        await guildData.updateOne({
-          loggingChannel,
-          loggingEnabled,
-        });
-        await guildData.save();
         interaction.reply({
           embeds: [
             new MessageEmbed()
@@ -169,6 +164,11 @@ The logging channel has been set to \`${loggingChannel}\`.
 **Enabled:** \`${loggingEnabled}\``),
           ],
         });
+        await guildData.updateOne({
+          loggingChannel,
+          loggingEnabled,
+        });
+        await guildData.save();
         break;
       }
       default:

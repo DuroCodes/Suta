@@ -9,6 +9,8 @@ export const client = new UserClient();
 (async () => {
   try {
     await client.login(env.DISCORD_TOKEN);
+    client.user?.setActivity(`to ${client.guilds.cache.size} servers`, { type: 'LISTENING' });
+    client.user?.setStatus('idle');
   } catch (e) {
     container.logger.error(e);
     client.destroy();

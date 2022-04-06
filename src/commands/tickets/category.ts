@@ -42,7 +42,7 @@ export class UserCommand extends Command {
       });
     }
 
-    async function createCategory(name: string, description: string, emojiString: string, embedDesc: string) {
+    async function createCategory(name: string, description: string, emojiString: string, embedDesc: string, ticketText: string) {
       const existing = await GuildSchema.findOne({
         guildId,
         ticketCategories: {
@@ -81,7 +81,7 @@ export class UserCommand extends Command {
       }
 
       await guildData.ticketCategories.push({
-        name, description, emoji: emojiString, embedDesc,
+        name, description, emoji: emojiString, embedDesc, ticketText,
       });
       await guildData.save();
 
@@ -249,7 +249,8 @@ The category \`${oldName}\` has been edited.
         const description = interaction.options.get('description')?.value as string;
         const emojiString = interaction.options.get('emoji')?.value as string;
         const embedDesc = interaction.options.get('embed-desc')?.value as string;
-        createCategory(name, description, emojiString, embedDesc);
+        const embedText = interaction.options.get('embed-text')?.value as string;
+        createCategory(name, description, emojiString, embedDesc, embedText);
         break;
       }
       case 'edit': {

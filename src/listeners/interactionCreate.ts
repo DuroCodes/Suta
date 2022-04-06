@@ -47,7 +47,7 @@ export class UserListener extends Listener {
             const embed = new MessageEmbed()
               .setTitle(`${emoji.ticket} Ticket Closed`)
               .setColor(colors.invisible as ColorResolvable)
-              .setDescription(`${user} closed the ticket \`${(channel as TextChannel).name}\`.`)
+              .setDescription(`${user} closed the ticket \`#${(channel as TextChannel).name}\`.`)
               .setTimestamp();
 
             await loggingChannel.send({ embeds: [embed] });
@@ -148,12 +148,12 @@ export class UserListener extends Listener {
 
         if (category.ticketText) {
           newChannel.send({
-            content: category.ticketText.replace('{user}', user).replace('\n', '\\n'),
+            content: category.ticketText.replace('{user}', user),
             embeds: [
               new MessageEmbed()
                 .setTitle(`${category.emoji} ${interaction.values[0]?.substring(7)} | Ticket`)
                 .setColor(colors.invisible as ColorResolvable)
-                .setDescription(`${(category.embedDesc || category.description).replace('{user}', user).replace('\n', '\\n')}`)
+                .setDescription(`${(category.embedDesc || category.description).replace('{user}', user).replace(/\\n/g, '\n')}`)
                 .setTimestamp(),
             ],
             components: [
@@ -172,7 +172,7 @@ export class UserListener extends Listener {
               new MessageEmbed()
                 .setTitle(`${category.emoji} ${interaction.values[0]?.substring(7)} | Ticket`)
                 .setColor(colors.invisible as ColorResolvable)
-                .setDescription(`${(category.embedDesc || category.description).replace('{user}', user).replace('\n', '\\n')}`)
+                .setDescription(`${(category.embedDesc || category.description).replace('{user}', user).replace(/\\n/g, '\n')}`)
                 .setTimestamp(),
             ],
             components: [
@@ -204,7 +204,7 @@ export class UserListener extends Listener {
             const embed = new MessageEmbed()
               .setTitle(`${emoji.ticket} Ticket Opened`)
               .setColor(colors.invisible as ColorResolvable)
-              .setDescription(`${user} opened a ticket, ${newChannel}.`)
+              .setDescription(`${user} opened a ticket \`#${newChannel.name}\`.`)
               .setTimestamp();
 
             await loggingChannel.send({ embeds: [embed] });

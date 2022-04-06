@@ -250,7 +250,7 @@ The category \`${oldName}\` has been edited.
         const emojiString = interaction.options.get('emoji')?.value as string;
         const embedDesc = interaction.options.get('embed-desc')?.value as string;
         const embedText = interaction.options.get('embed-message')?.value as string;
-        createCategory(name, description, emojiString, embedDesc, embedText);
+        createCategory(name, description, emojiString, embedDesc, embedText?.replace(/\\n/g, '\n'));
         break;
       }
       case 'edit': {
@@ -260,7 +260,7 @@ The category \`${oldName}\` has been edited.
         const newEmoji = interaction.options.get('emoji')?.value as string;
         const newEmbedDesc = interaction.options.get('embed-desc')?.value as string;
         const newTicketText = interaction.options.get('embed-message')?.value as string;
-        editCategory(oldName, newName, newDescription, newEmoji, newEmbedDesc, newTicketText);
+        editCategory(oldName, newName, newDescription, newEmoji, newEmbedDesc, newTicketText?.replace(/\\n/g, '\n'));
         break;
       }
       case 'delete': {

@@ -160,12 +160,13 @@ The ticket menu has been updated.
               .setTitle(`${emoji.settings} Logging`)
               .setColor(colors.invisible as ColorResolvable)
               .setDescription(`\
-The logging channel has been set to \`${loggingChannel}\`.
+The logging channel has been updated.
+**Channel:** \`${loggingChannel || guildData?.loggingChannel || 'No Channel'}\`
 **Enabled:** \`${loggingEnabled}\``),
           ],
         });
         await guildData.updateOne({
-          loggingChannel,
+          loggingChannel: loggingChannel || guildData?.loggingChannel,
           loggingEnabled,
         });
         await guildData.save();
@@ -190,7 +191,6 @@ The logging channel has been set to \`${loggingChannel}\`.
         .addChannelOption((cha) => cha
           .setName('channel')
           .setDescription('The channel to log to.')
-          .setRequired(true)
           .addChannelTypes([0])))
       .addSubcommand((sub) => sub
         .setName(Subcommand.SupportRole)

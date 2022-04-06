@@ -249,7 +249,7 @@ The category \`${oldName}\` has been edited.
         const description = interaction.options.get('description')?.value as string;
         const emojiString = interaction.options.get('emoji')?.value as string;
         const embedDesc = interaction.options.get('embed-desc')?.value as string;
-        const embedText = interaction.options.get('embed-text')?.value as string;
+        const embedText = interaction.options.get('embed-message')?.value as string;
         createCategory(name, description, emojiString, embedDesc, embedText);
         break;
       }

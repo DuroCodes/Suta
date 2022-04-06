@@ -23,5 +23,5 @@ export const client = new UserClient();
     }).catch((e) => {
       container.logger.error(e);
     });
-  client.application?.commands.set([]); //* Remove All Commands
+  // client.application?.commands.set([]); //* Remove All Commands
 })().catch((e) => container.logger.error(e));

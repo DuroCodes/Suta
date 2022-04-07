@@ -11,6 +11,7 @@ import { Command } from '@sapphire/framework';
 import GuildSchema from '../../schemas/guild';
 import colors from '../../util/colors.json';
 import emoji from '../../util/emoji.json';
+import { Category } from '../../typings/category';
 
 @ApplyOptions<CommandOptions>({
   chatInputCommand: {
@@ -234,7 +235,7 @@ The category \`${oldName}\` has been edited.
 
     async function listCategories() {
       const categories = guildData.ticketCategories;
-      const ticketCategories = categories.map((c) => `**${c.name}**\n**Description:** \`${c.description}\`\n**Emoji:** ${c.emoji}`).join('\n\n');
+      const ticketCategories = categories.map((c: Category) => `**${c.name}**\n**Description:** \`${c.description}\`\n**Emoji:** ${c.emoji}`).join('\n\n');
 
       const embed = new MessageEmbed()
         .setTitle(`${emoji.box} Ticket Categories`)

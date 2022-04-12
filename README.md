@@ -28,6 +28,12 @@
 4. Install the dependencies using `npm i`. 📦
 5. Run `npm run start` or `tsc && ts-node src/main.ts`. 🏁
 
+## **Quick Deployments:**
+
+[![Deploy on Railway](https://raw.githubusercontent.com/BinBashBanana/deploy-buttons/master/buttons/remade/railway.svg)](https://railway.app/new/template/5aZ-be?referralCode=7FvNbQ)
+[![Run on Replit](https://raw.githubusercontent.com/BinBashBanana/deploy-buttons/master/buttons/remade/replit.svg)](https://replit.com/github/durocodes/suta)
+[![Deploy to Heroku](https://raw.githubusercontent.com/BinBashBanana/deploy-buttons/master/buttons/remade/heroku.svg)](https://heroku.com/deploy/?template=https://github.com/durocodes/suta)
+
 ## **Frameworks/Languages Used:**
 
 - **[TypeScript](https://www.typescriptlang.org/)** 🖌

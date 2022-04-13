@@ -124,15 +124,15 @@ export class UserListener extends Listener {
           },
           {
             id: user.id,
-            allow: ['VIEW_CHANNEL'],
+            allow: ['VIEW_CHANNEL', 'SEND_MESSAGES'],
           },
           {
             id: supportRole,
-            allow: ['VIEW_CHANNEL'],
+            allow: ['VIEW_CHANNEL', 'SEND_MESSAGES'],
           },
           {
             id: adminRole,
-            allow: ['VIEW_CHANNEL'],
+            allow: ['VIEW_CHANNEL', 'SEND_MESSAGES'],
           },
         ],
       }).then(async (newChannel: TextChannel) => {

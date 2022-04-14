@@ -1,6 +1,7 @@
 import { Listener, type ListenerOptions } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
 import { bold } from 'chalk';
+import { client } from '../main';
 
 @ApplyOptions<ListenerOptions>({
   name: 'ready',
@@ -10,8 +11,8 @@ import { bold } from 'chalk';
 export class UserListener extends Listener {
   public run(): void {
     this.container.logger.info(`Logged in as ${bold(this.container.client.user?.tag)}`);
-    this.client.user?.setStatus('idle');
-    const updateStatus = () => this.client.user?.setActivity(`${this.client.guilds.cache.size} servers`, { type: 'LISTENING' });
+    client.user?.setStatus('idle');
+    const updateStatus = () => client.user?.setActivity(`${client.guilds.cache.size} servers`, { type: 'LISTENING' });
     setInterval(updateStatus, 60_000);
   }
 }

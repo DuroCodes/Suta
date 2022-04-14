@@ -10,5 +10,8 @@ import { bold } from 'chalk';
 export class UserListener extends Listener {
   public run(): void {
     this.container.logger.info(`Logged in as ${bold(this.container.client.user?.tag)}`);
+    this.client.user?.setStatus('idle');
+    const updateStatus = () => this.client.user?.setActivity(`${this.client.guilds.cache.size} servers`, { type: 'LISTENING' });
+    setInterval(updateStatus, 60_000);
   }
 }

@@ -71,6 +71,10 @@ export class UserListener extends Listener {
       } = guildData;
       const { channel } = guildData.ticketMenu;
 
+      const menuChannel = interaction.channel as TextChannel;
+      const menuMessage = await menuChannel?.messages.fetch(interaction.message.id);
+      menuMessage.edit({ components: menuMessage.components });
+
       if (!ticketCategory || !ticketCategories || !maxTickets || !supportRole || !adminRole || !channel) {
         return interaction.reply({
           embeds: [
@@ -82,10 +86,6 @@ export class UserListener extends Listener {
           ephemeral: true,
         });
       }
-
-      const menuChannel = interaction.channel as TextChannel;
-      const menuMessage = await menuChannel?.messages.fetch(interaction.message.id);
-      menuMessage.edit({ components: menuMessage.components });
 
       const occurances = tickets.filter((ticket: Ticket) => ticket.creatorId === user.id).length;
       if (occurances >= maxTickets) {

@@ -14,7 +14,6 @@ import { env } from '../../lib';
   enabled: true,
   name: 'eval',
   fullCategory: ['Utility', 'Administration'],
-  preconditions: ['OwnerOnly'],
 })
 
 export class UserCommand extends Command {

@@ -37,7 +37,7 @@ export class UserCommand extends Command {
           new MessageEmbed()
             .setTitle('Suta 💫 - Eval')
             .setColor(colors.invisible as ColorResolvable)
-            .setDescription(`\`\`\`ts\n${result.substring(0, 1950)}\n\`\`\``),
+            .setDescription(`\`\`\`ts\n${result}\n\`\`\``),
         ],
       });
     } catch (err) {

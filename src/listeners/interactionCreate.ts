@@ -157,13 +157,14 @@ export class UserListener extends Listener {
                 .setTimestamp(),
             ],
             components: [
-              new MessageActionRow().addComponents(
-                new MessageButton()
-                  .setCustomId('ticket-close')
-                  .setLabel('Close Ticket')
-                  .setStyle('DANGER')
-                  .setEmoji('🔒'),
-              ),
+              new MessageActionRow()
+                .addComponents(
+                  new MessageButton()
+                    .setCustomId('ticket-close')
+                    .setLabel('Close Ticket')
+                    .setStyle('DANGER')
+                    .setEmoji('🔒'),
+                ),
             ],
           });
         } else {
@@ -176,13 +177,14 @@ export class UserListener extends Listener {
                 .setTimestamp(),
             ],
             components: [
-              new MessageActionRow().addComponents(
-                new MessageButton()
-                  .setCustomId('ticket-close')
-                  .setLabel('Close Ticket')
-                  .setStyle('DANGER')
-                  .setEmoji('🔒'),
-              ),
+              new MessageActionRow()
+                .addComponents(
+                  new MessageButton()
+                    .setCustomId('ticket-close')
+                    .setLabel('Close Ticket')
+                    .setStyle('DANGER')
+                    .setEmoji('🔒'),
+                ),
             ],
           });
         }

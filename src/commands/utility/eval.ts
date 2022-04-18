@@ -31,7 +31,7 @@ export class UserCommand extends Command {
     const code = interaction.options.get('code')?.value as string;
     try {
       // eslint-disable-next-line no-eval
-      const result: string = eval(code);
+      const result: string = eval(`(async () => {\n${code}\n})()`);
       interaction.reply({
         embeds: [
           new MessageEmbed()

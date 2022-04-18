@@ -6,7 +6,7 @@ import type { ApplicationCommandRegistry, CommandOptions } from '@sapphire/frame
 import { fetch, FetchMethods, FetchResultTypes } from '@sapphire/fetch';
 import { canSendMessages } from '@sapphire/discord.js-utilities';
 import { setTimeout as sleep } from 'node:timers/promises';
-import { CommandInteraction, Message } from 'discord.js';
+import { ColorResolvable, CommandInteraction, Message, MessageEmbed } from 'discord.js';
 import { ApplyOptions } from '@sapphire/decorators';
 import { hideLinkEmbed } from '@discordjs/builders';
 import { Time } from '@sapphire/time-utilities';
@@ -16,6 +16,9 @@ import { Command } from '@sapphire/framework';
 import { exec } from 'child_process';
 import Type from '@sapphire/type';
 import { bold } from 'chalk';
+import { env } from '../../lib';
+import colors from '../../util/colors.json';
+import emoji from '../../util/emoji.json';
 
 const seconds = (seconds: number): number => seconds * Time.Second;
 seconds.fromMilliseconds = (milliseconds: number): number => roundNumber(milliseconds / Time.Second);
@@ -110,6 +113,16 @@ export class UserCommand extends Command {
   ];
 
   public override async chatInputRun(interaction: CommandInteraction) {
+    if (interaction.user.id !== env.DISCORD_OWNER) {
+      return interaction.reply({
+        embeds: [
+          new MessageEmbed()
+            .setTitle(`${emoji.wrong} You do not have permission to use this command.`)
+            .setColor(colors.invisible as ColorResolvable),
+        ],
+      });
+    }
+
     const message = await interaction.deferReply({
       ephemeral: true,
       fetchReply: true,

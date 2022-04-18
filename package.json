@@ -19,6 +19,7 @@
     "@sapphire/type": "^2.2.0",
     "@sapphire/utilities": "^3.6.1",
     "chalk": "^4.1.2",
+    "discord-api-types": "^0.31.2",
     "discord.js": "^13.6.0",
     "mongoose": "^6.2.9",
     "ms": "^2.1.3",

@@ -191,7 +191,7 @@ The logging channel has been updated.
         .addChannelOption((cha) => cha
           .setName('channel')
           .setDescription('The channel to log to.')
-          .addChannelTypes([0])))
+          .addChannelTypes(0)))
       .addSubcommand((sub) => sub
         .setName(Subcommand.SupportRole)
         .setDescription('Set the support role for the ticket system.')
@@ -220,7 +220,7 @@ The logging channel has been updated.
           .setName(Subcommand.Category)
           .setDescription('The category to use for tickets.')
           .setRequired(true)
-          .addChannelTypes([4])))
+          .addChannelTypes(4)))
       .addSubcommand((sub) => sub
         .setName(Subcommand.Menu)
         .setDescription('Change the appearance of the ticket menu.')
@@ -232,7 +232,7 @@ The logging channel has been updated.
           .setName('channel')
           .setDescription('The channel to send the ticket menu to.')
           .setRequired(true)
-          .addChannelTypes([0]))
+          .addChannelTypes(0))
         .addStringOption((option) => option
           .setName('description')
           .setDescription('The description of the ticket menu.'))

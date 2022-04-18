@@ -39,6 +39,7 @@ export class UserCommand extends Command {
             .setColor(colors.invisible as ColorResolvable)
             .setDescription(`\`\`\`ts\n${result}\n\`\`\``),
         ],
+        ephemeral: true,
       });
     } catch (err) {
       return interaction.reply({
@@ -48,6 +49,7 @@ export class UserCommand extends Command {
             .setColor(colors.invisible as ColorResolvable)
             .setDescription(`\`\`\`ts\n${err}\`\`\``),
         ],
+        ephemeral: true,
       });
     }
   }

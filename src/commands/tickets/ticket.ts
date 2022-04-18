@@ -98,12 +98,13 @@ export class UserCommand extends Command {
         };
       });
 
-      const dropdown = new MessageActionRow().addComponents(
-        new MessageSelectMenu()
-          .setCustomId('ticket-menu')
-          .setPlaceholder('Select a ticket category...')
-          .setOptions(reasons),
-      );
+      const dropdown = new MessageActionRow()
+        .addComponents(
+          new MessageSelectMenu()
+            .setCustomId('ticket-menu')
+            .setPlaceholder('Select a ticket category...')
+            .setOptions(reasons),
+        );
 
       const embed = new MessageEmbed()
         .setTitle(title)

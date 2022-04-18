@@ -31,13 +31,13 @@ export class UserCommand extends Command {
     const code = interaction.options.get('code')?.value as string;
     try {
       // eslint-disable-next-line no-eval
-      const result = eval(code);
+      const result: string = eval(code);
       interaction.reply({
         embeds: [
           new MessageEmbed()
             .setTitle('Suta 💫 - Eval')
             .setColor(colors.invisible as ColorResolvable)
-            .setDescription(`\`\`\`js\n${result}\n\`\`\``),
+            .setDescription(`\`\`\`ts\n${result.substring(0, 1950)}\n\`\`\``),
         ],
       });
     } catch (err) {

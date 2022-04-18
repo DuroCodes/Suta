@@ -7,7 +7,6 @@ import { fetch, FetchMethods, FetchResultTypes } from '@sapphire/fetch';
 import { canSendMessages } from '@sapphire/discord.js-utilities';
 import { setTimeout as sleep } from 'node:timers/promises';
 import { CommandInteraction, Message } from 'discord.js';
-import type { APIMessage } from 'discord-api-types/v9';
 import { ApplyOptions } from '@sapphire/decorators';
 import { hideLinkEmbed } from '@discordjs/builders';
 import { Time } from '@sapphire/time-utilities';
@@ -274,7 +273,7 @@ export class UserCommand extends Command {
   private async handleReply(
     interaction: CommandInteraction,
     options: EvalReplyParameters,
-  ): Promise<APIMessage | Message<boolean> | null> {
+  ) {
     const typeFooter = ` ${bold('Type')}:${options.footer}`;
     const timeTaken = options.time;
     switch (options.outputTo) {
@@ -288,13 +287,15 @@ export class UserCommand extends Command {
           const attachment = Buffer.from(options.result);
           const name = `output.${options.language}`;
 
-          return interaction.editReply({ content, files: [{ attachment, name }] });
+          void interaction.editReply({ content, files: [{ attachment, name }] });
+          break;
         }
 
         options.fileUnavailable = true;
         this.getOtherTypeOutput(options);
 
-        return this.handleReply(interaction, options);
+        void this.handleReply(interaction, options);
+        break;
       }
       case 'hastebin': {
         if (!options.url) {
@@ -312,14 +313,16 @@ export class UserCommand extends Command {
             .filter(filterNullAndUndefinedAndEmpty)
             .join('\n');
 
-          return interaction.editReply({ content });
+          void interaction.editReply({ content });
+          break;
         }
 
         options.hastebinUnavailable = true;
 
         this.getOtherTypeOutput(options);
 
-        return this.handleReply(interaction, options);
+        void this.handleReply(interaction, options);
+        break;
       }
       case 'console': {
         this.container.logger.info(options.result);
@@ -329,7 +332,8 @@ export class UserCommand extends Command {
           .filter(filterNullAndUndefinedAndEmpty)
           .join('\n');
 
-        return interaction.editReply({ content });
+        void interaction.editReply({ content });
+        break;
       }
       case 'exec': {
         try {
@@ -353,23 +357,27 @@ export class UserCommand extends Command {
             const content = [hastebinUrl] //
               .filter(filterNullAndUndefinedAndEmpty)
               .join('\n');
-            return interaction.editReply({ content });
+            void interaction.editReply({ content });
+            break;
           }
 
           const output = codeBlock(options.language, stdout);
 
           const content = `${bold('Input')}:${output}\n${options.time}`;
 
-          return interaction.editReply({ content });
+          void interaction.editReply({ content });
+          break;
         } catch (err) {
           const output = codeBlock(options.language, err);
           const content = `${bold('Error')}\n${output}\n${options.time}`;
 
-          return interaction.editReply({ content });
+          void interaction.editReply({ content });
+          break;
         }
       }
       case 'none': {
-        return interaction.editReply({ content: 'Aborted!' });
+        void interaction.editReply({ content: 'Aborted!' });
+        break;
       }
       case 'reply':
       default: {
@@ -377,7 +385,7 @@ export class UserCommand extends Command {
           options.replyUnavailable = true;
           this.getOtherTypeOutput(options);
 
-          return this.handleReply(interaction, options);
+          void this.handleReply(interaction, options);
         }
 
         if (options.success) {
@@ -393,12 +401,13 @@ export class UserCommand extends Command {
           const content = [parsedInput, parsedOutput, typeFooter, timeTaken]
             .filter(Boolean)
             .join('\n');
-          return interaction.editReply({ content });
+          void interaction.editReply({ content });
         }
 
         const output = codeBlock(options.language, options.result);
         const content = `${bold('Error')}:${output}\n${bold('Type')}:${options.footer}\n${options.time}`;
-        return interaction.editReply({ content });
+        void interaction.editReply({ content });
+        break;
       }
     }
   }

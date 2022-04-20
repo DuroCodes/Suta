@@ -1,8 +1,8 @@
-import { Listener, type ListenerOptions } from '@sapphire/framework';
-import { ApplyOptions } from '@sapphire/decorators';
 import {
   CategoryChannel, ColorResolvable, Interaction, MessageActionRow, MessageButton, MessageEmbed, TextChannel, Guild,
 } from 'discord.js';
+import { Listener, type ListenerOptions } from '@sapphire/framework';
+import { ApplyOptions } from '@sapphire/decorators';
 import { Category } from '../typings/category';
 import { Ticket } from '../typings/ticket';
 import GuildSchema from '../schemas/guild';

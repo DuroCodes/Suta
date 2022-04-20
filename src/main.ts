@@ -3,6 +3,7 @@ import { container } from '@sapphire/framework';
 import { connect } from 'mongoose';
 import { bold } from 'chalk';
 import { env, UserClient } from './lib';
+import startServer from './server';
 
 export const client = new UserClient();
 
@@ -21,5 +22,7 @@ export const client = new UserClient();
     }).catch((e) => {
       container.logger.error(e);
     });
+
+  startServer();
   // client.application?.commands.set([]); //* Remove All Commands
 })().catch((e) => container.logger.error(e));

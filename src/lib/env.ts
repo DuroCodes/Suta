@@ -4,4 +4,5 @@ export const env = load({
   DISCORD_OWNER: String,
   DISCORD_TOKEN: String,
   MONGO_URI: String,
+  PORT: Number,
 });

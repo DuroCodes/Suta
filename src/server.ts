@@ -14,6 +14,7 @@ export default function startServer() {
   const port = env.PORT || 3000;
 
   app.get('/', async (_req, rep) => {
+    rep.header('Access-Control-Allow-Origin', '*');
     rep.type('application/json').code(200);
     return {
       servers: client.guilds.cache.size,

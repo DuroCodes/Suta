@@ -21,5 +21,7 @@ export default function startServer() {
     } as Data;
   });
 
-  app.listen(port, () => container.logger.info(`Listening on port ${bold(port)} 🚀`));
+  app.listen(port, '0.0.0.0', () => {
+    container.logger.info(`Listening on port ${bold(port)} 🚀`);
+  });
 }

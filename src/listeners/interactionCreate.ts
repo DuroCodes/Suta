@@ -17,6 +17,21 @@ export class UserListener extends Listener {
   public async run(interaction: Interaction): Promise<void> {
     if (interaction.isCommand() && !interaction.guildId) return;
 
+    if (interaction.isAutocomplete()) {
+      if (interaction.commandName === 'category') {
+        const guildData = await GuildSchema.findOne({ guildId: interaction.guildId });
+        if (!guildData) return;
+        const { categories } = guildData;
+        switch (interaction.options.getSubcommand(true)) {
+          case 'delete': {
+            return interaction.respond([
+
+            ]);
+          }
+        }
+      }
+    }
+
     if (interaction.isButton()) {
       if (interaction.customId === 'ticket-close') {
         const { guildId, user, channel } = interaction;

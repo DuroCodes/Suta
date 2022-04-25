@@ -100,7 +100,9 @@ The category has been created.
       });
     }
 
-    async function editCategory(oldName: string, newName: string, newDescription: string, newEmoji: string, newEmbedDesc: string, newTicketText: string) {
+    async function editCategory(oldName: string, newN: string, newDescription: string, newEmoji: string, newEmbedDesc: string, newTicketText: string) {
+      const newName = newN || oldName;
+
       const current = await GuildSchema.findOne({
         guildId,
         ticketCategories: {
@@ -314,8 +316,7 @@ The category \`${oldName}\` has been edited.
           .setAutocomplete(true))
         .addStringOption((desc) => desc
           .setName('new-name')
-          .setDescription('The new name of the category.')
-          .setRequired(true))
+          .setDescription('The new name of the category.'))
         .addStringOption((emoji) => emoji
           .setName('description')
           .setDescription('The new description of the category.'))

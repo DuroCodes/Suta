@@ -31,18 +31,7 @@ export class UserListener extends Listener {
             value: value.name as string,
           });
         });
-
-        switch (interaction.options.getSubcommand(true)) {
-          case 'delete': {
-            return interaction.respond(choices);
-          }
-          case 'edit': {
-            return interaction.respond(choices);
-          }
-          default: {
-            return;
-          }
-        }
+        return interaction.respond(choices);
       }
     }
 

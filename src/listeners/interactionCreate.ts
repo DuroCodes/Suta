@@ -25,10 +25,10 @@ export class UserListener extends Listener {
         const { ticketCategories } = guildData;
 
         const choices: ApplicationCommandOptionChoice[] = [];
-        ticketCategories?.forEach((value: TicketCategory) => {
+        ticketCategories?.forEach(({ name }: TicketCategory) => {
           choices.push({
-            name: value.name as string,
-            value: value.name as string,
+            name: name as string,
+            value: name as string,
           });
         });
         return interaction.respond(choices);

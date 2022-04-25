@@ -7,8 +7,9 @@ import { Command } from '@sapphire/framework';
 import GuildSchema from '../../schemas/guild';
 import colors from '../../util/colors.json';
 import emoji from '../../util/emoji.json';
-import { Category } from '../../typings/category';
+import { TicketCategory } from '../../typings/category';
 import { Ticket } from '../../typings/ticket';
+import { TicketMenu } from '../../typings/menu';
 
 @ApplyOptions<CommandOptions>({
   chatInputCommand: {
@@ -30,7 +31,7 @@ export class UserCommand extends Command {
     if (!guildData) guildData = await new GuildSchema({ guildId });
 
     async function menu() {
-      if (!roles.cache.has(guildData?.adminRole) && !permissions.has('ADMINISTRATOR')) {
+      if (!roles.cache.has(guildData?.adminRole as string) && !permissions.has('ADMINISTRATOR')) {
         return interaction.reply({
           embeds: [
             new MessageEmbed()
@@ -41,7 +42,7 @@ export class UserCommand extends Command {
         });
       }
 
-      if (guildData.ticketCategories.length < 1) {
+      if (!guildData?.ticketCategories || guildData?.ticketCategories?.length < 1) {
         return interaction.reply({
           embeds: [
             new MessageEmbed()
@@ -54,7 +55,7 @@ export class UserCommand extends Command {
 
       const {
         title, description, channel, color, footer, timestamp,
-      } = guildData.ticketMenu;
+      } = guildData?.ticketMenu as TicketMenu;
 
       if (!channel) {
         return interaction.reply({
@@ -89,12 +90,12 @@ export class UserCommand extends Command {
         });
       }
 
-      const reasons = guildData.ticketCategories.map((category: Category) => {
+      const reasons = guildData?.ticketCategories?.map((category: TicketCategory) => {
         const {
           emoji: emojiName, description, name: label,
         } = category;
         return {
-          emoji: emojiName, description, label, value: `ticket-${label}`,
+          emoji: emojiName as string, description: description as string, label: label as string, value: `ticket-${label}`,
         };
       });
 
@@ -107,9 +108,9 @@ export class UserCommand extends Command {
         );
 
       const embed = new MessageEmbed()
-        .setTitle(title)
-        .setColor(color)
-        .setDescription(`${description ? `${description}\n` : ''}${guildData.ticketCategories.map((category: Category) => `${category.emoji} - ${category.name}`).join('\n')}`);
+        .setTitle(title as string)
+        .setColor(color as ColorResolvable)
+        .setDescription(`${description ? `${description}\n` : ''}${guildData.ticketCategories.map((category: TicketCategory) => `${category.emoji} - ${category.name}`).join('\n')}`);
 
       if (footer) embed.setFooter({ text: footer });
       if (timestamp) embed.setTimestamp();
@@ -121,7 +122,7 @@ export class UserCommand extends Command {
     }
 
     async function add(user: User) {
-      if (!roles.cache.has(guildData?.supportRole) && !permissions.has('ADMINISTRATOR')) {
+      if (!roles.cache.has(guildData?.supportRole as string) && !permissions.has('ADMINISTRATOR')) {
         return interaction.reply({
           embeds: [
             new MessageEmbed()
@@ -132,7 +133,7 @@ export class UserCommand extends Command {
         });
       }
 
-      const { tickets } = guildData;
+      const { tickets } = guildData as any;
 
       if (!tickets.find((t: Ticket) => t.channelId === interaction.channelId)) {
         return interaction.reply({
@@ -158,7 +159,7 @@ export class UserCommand extends Command {
       }
 
       ticket.addedUsers.push((user.id).toString());
-      await guildData.save();
+      await guildData?.save();
 
       const channel = interaction?.channel as TextChannel;
       channel.permissionOverwrites.create(user, { VIEW_CHANNEL: true });
@@ -174,7 +175,7 @@ export class UserCommand extends Command {
     }
 
     async function remove(user: User) {
-      if (!roles.cache.has(guildData?.supportRole) && !permissions.has('ADMINISTRATOR')) {
+      if (!roles.cache.has(guildData?.supportRole as string) && !permissions.has('ADMINISTRATOR')) {
         return interaction.reply({
           embeds: [
             new MessageEmbed()
@@ -185,7 +186,7 @@ export class UserCommand extends Command {
         });
       }
 
-      const { tickets } = guildData;
+      const { tickets } = guildData as any;
 
       if (!tickets.find((t: Ticket) => t.channelId === interaction.channelId)) {
         return interaction.reply({
@@ -211,7 +212,7 @@ export class UserCommand extends Command {
       }
 
       ticket.addedUsers.pull((user.id).toString());
-      await guildData.save();
+      await guildData?.save();
 
       const channel = interaction?.channel as TextChannel;
       channel.permissionOverwrites.delete(user);
@@ -227,7 +228,7 @@ export class UserCommand extends Command {
     }
 
     async function claim() {
-      const { tickets } = guildData;
+      const { tickets } = guildData as any;
       const ticket = tickets.find((t: Ticket) => t.channelId === interaction.channelId);
 
       if (!ticket) {
@@ -253,10 +254,10 @@ export class UserCommand extends Command {
       }
 
       ticket.claimed = true;
-      await guildData.save();
+      await guildData?.save();
 
       const channel = interaction?.channel as TextChannel;
-      channel.permissionOverwrites.edit(guildData.supportRole, {
+      channel.permissionOverwrites.edit(guildData?.supportRole as string, {
         VIEW_CHANNEL: false,
       });
 
@@ -270,7 +271,7 @@ export class UserCommand extends Command {
     }
 
     async function unclaim() {
-      const { tickets } = guildData;
+      const { tickets } = guildData as any;
       const ticket = tickets.find((t: Ticket) => t.channelId === interaction.channelId);
 
       if (!ticket) {
@@ -296,10 +297,10 @@ export class UserCommand extends Command {
       }
 
       ticket.claimed = false;
-      await guildData.save();
+      await guildData?.save();
 
       const channel = interaction?.channel as TextChannel;
-      channel.permissionOverwrites.edit(guildData.supportRole, {
+      channel.permissionOverwrites.edit(guildData?.supportRole as string, {
         VIEW_CHANNEL: true,
       });
 
@@ -313,7 +314,7 @@ export class UserCommand extends Command {
     }
 
     async function rename(name: string) {
-      const { tickets } = guildData;
+      const { tickets } = guildData as any;
       const ticket = tickets.find((t: Ticket) => t.channelId === interaction.channelId);
 
       if (!ticket) {
@@ -329,7 +330,7 @@ export class UserCommand extends Command {
 
       const channel = interaction.channel as TextChannel;
 
-      if (guildData.loggingEnabled && guildData.loggingChannel) {
+      if (guildData?.loggingEnabled && guildData.loggingChannel) {
         const guild = interaction.guild as Guild;
         const loggingChannel = guild.channels.cache.get(guildData.loggingChannel);
         if (loggingChannel instanceof TextChannel) {
@@ -356,7 +357,7 @@ export class UserCommand extends Command {
     }
 
     async function close() {
-      const { tickets } = guildData;
+      const { tickets } = guildData as any;
       const ticket = tickets.find((t: Ticket) => t.channelId === interaction.channelId);
       if (!ticket) {
         return interaction.reply({
@@ -369,10 +370,10 @@ export class UserCommand extends Command {
         });
       }
 
-      guildData.tickets.pull(ticket);
-      await guildData.save();
+      (guildData?.tickets as any).pull(ticket);
+      await guildData?.save();
 
-      if (guildData.loggingEnabled && guildData.loggingChannel) {
+      if (guildData?.loggingEnabled && guildData.loggingChannel) {
         const guild = interaction.guild as Guild;
         const loggingChannel = guild.channels.cache.get(guildData.loggingChannel);
         if (loggingChannel instanceof TextChannel) {

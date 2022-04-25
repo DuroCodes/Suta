@@ -1,9 +1,9 @@
 import {
-  CategoryChannel, ColorResolvable, Interaction, MessageActionRow, MessageButton, MessageEmbed, TextChannel, Guild,
+  CategoryChannel, ColorResolvable, Interaction, MessageActionRow, MessageButton, MessageEmbed, TextChannel, Guild, ApplicationCommandOptionChoice,
 } from 'discord.js';
 import { Listener, type ListenerOptions } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
-import { Category } from '../typings/category';
+import { TicketCategory } from '../typings/category';
 import { Ticket } from '../typings/ticket';
 import GuildSchema from '../schemas/guild';
 import colors from '../util/colors.json';
@@ -21,12 +21,26 @@ export class UserListener extends Listener {
       if (interaction.commandName === 'category') {
         const guildData = await GuildSchema.findOne({ guildId: interaction.guildId });
         if (!guildData) return;
-        const { categories } = guildData;
+
+        const { ticketCategories } = guildData;
+
+        const choices: ApplicationCommandOptionChoice[] = [];
+        ticketCategories?.forEach((value: TicketCategory) => {
+          choices.push({
+            name: value.name as string,
+            value: value.name as string,
+          });
+        });
+
         switch (interaction.options.getSubcommand(true)) {
           case 'delete': {
-            return interaction.respond([
-
-            ]);
+            return interaction.respond(choices);
+          }
+          case 'edit': {
+            return interaction.respond(choices);
+          }
+          default: {
+            return;
           }
         }
       }
@@ -52,7 +66,7 @@ export class UserListener extends Listener {
           });
         }
 
-        tickets.pull(ticket);
+        (tickets as any).pull(ticket);
         await guildData.save();
 
         if (guildData.loggingEnabled && guildData.loggingChannel) {
@@ -78,19 +92,19 @@ export class UserListener extends Listener {
       let guildData = await GuildSchema.findOne({ guildId });
       if (!guildData) guildData = new GuildSchema({ guildId });
 
-      const ticketTopics = guildData.ticketCategories.map((category: Category) => `ticket-${category.name}`);
-      if (!ticketTopics.includes(interaction.values[0])) return;
+      const ticketTopics = guildData?.ticketCategories?.map((category: TicketCategory) => `ticket-${category.name}`);
+      if (!ticketTopics?.includes(interaction.values[0] as string)) return;
 
       const {
         ticketCategories, tickets, maxTickets, supportRole, adminRole, ticketCategory,
       } = guildData;
-      const { channel } = guildData.ticketMenu;
+      const { loggingChannel } = guildData;
 
       const menuChannel = interaction.channel as TextChannel;
       const menuMessage = await menuChannel?.messages.fetch(interaction.message.id);
       menuMessage.edit({ components: menuMessage.components });
 
-      if (!ticketCategory || !ticketCategories || !maxTickets || !supportRole || !adminRole || !channel) {
+      if (!ticketCategory || !ticketCategories || !maxTickets || !supportRole || !adminRole || !loggingChannel) {
         return interaction.reply({
           embeds: [
             new MessageEmbed()
@@ -114,7 +128,7 @@ export class UserListener extends Listener {
         });
       }
 
-      const category = ticketCategories.find((c: Category) => c.name === interaction.values[0]?.substring(7));
+      const category = ticketCategories.find((c: TicketCategory) => c.name === interaction.values[0]?.substring(7));
       if (!category) {
         return interaction.reply({
           embeds: [
@@ -163,12 +177,12 @@ export class UserListener extends Listener {
 
         if (category.ticketText) {
           newChannel.send({
-            content: category.ticketText.replace('{user}', user),
+            content: category.ticketText.replace('{user}', `<@${user.id}>`),
             embeds: [
               new MessageEmbed()
                 .setTitle(`${category.emoji} ${interaction.values[0]?.substring(7)} | Ticket`)
                 .setColor(colors.invisible as ColorResolvable)
-                .setDescription(`${(category.embedDesc || category.description).replace('{user}', user).replace(/\\n/g, '\n')}`)
+                .setDescription(`${(category.embedDesc || category.description || 'Hello {user}! Please explain your issue further').replace('{user}', `<@${user.id}>`).replace(/\\n/g, '\n')}`)
                 .setTimestamp(),
             ],
             components: [
@@ -188,7 +202,7 @@ export class UserListener extends Listener {
               new MessageEmbed()
                 .setTitle(`${category.emoji} ${interaction.values[0]?.substring(7)} | Ticket`)
                 .setColor(colors.invisible as ColorResolvable)
-                .setDescription(`${(category.embedDesc || category.description).replace('{user}', user).replace(/\\n/g, '\n')}`)
+                .setDescription(`${(category.embedDesc || category.description || 'Hello {user}! Please explain your issue further').replace('{user}', `<@${user.id}>`).replace(/\\n/g, '\n')}`)
                 .setTimestamp(),
             ],
             components: [
@@ -204,17 +218,17 @@ export class UserListener extends Listener {
           });
         }
 
-        await tickets.push({
+        tickets.push({
           creatorId: user.id,
           channelId: newChannel.id,
-          guildId: interaction.guildId,
+          guildId: interaction.guildId as string,
           createdAt: new Date().toISOString(),
           claimed: false,
           addedUsers: [],
         });
-        await guildData.save();
+        await guildData?.save();
 
-        if (guildData.loggingEnabled && guildData.loggingChannel) {
+        if (guildData?.loggingEnabled && guildData.loggingChannel) {
           const guild = interaction.guild as Guild;
           const loggingChannel = guild.channels.cache.get(guildData.loggingChannel);
           if (loggingChannel instanceof TextChannel) {

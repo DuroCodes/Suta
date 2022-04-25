@@ -33,9 +33,9 @@ export class UserCommand extends Command {
     const { roles } = interaction.member as GuildMember;
     const { permissions } = interaction.member as GuildMember;
     let guildData = await GuildSchema.findOne({ guildId });
-    if (!guildData) guildData = await new GuildSchema({ guildId });
+    if (!guildData) guildData = new GuildSchema({ guildId });
 
-    if (!roles.cache.has(guildData?.adminRole) && !permissions.has('ADMINISTRATOR')) {
+    if (!roles.cache.has(guildData?.adminRole as string) && !permissions.has('ADMINISTRATOR')) {
       return interaction.reply({
         embeds: [
           new MessageEmbed()
@@ -93,7 +93,7 @@ export class UserCommand extends Command {
         const title = interaction.options.get('title')?.value as string;
         const description = interaction.options.get('description')?.value as string;
         const channel = interaction.options.get('channel')?.value as string;
-        const color = interaction.options.get('color')?.value as string || guildData.ticketMenu.color || colors.invisible;
+        const color = interaction.options.get('color')?.value as string || guildData.ticketMenu?.color || colors.invisible;
         const footer = interaction.options.get('footer')?.value as string;
         const timestamp = interaction.options.get('timestamp')?.value as boolean || false;
         const showDescription = interaction.options.get('show-description')?.value as boolean || true;

@@ -42,7 +42,7 @@ export class UserCommand extends Command {
         ephemeral: true,
       });
     } catch (err) {
-      return interaction.reply({
+      return interaction.followUp({
         embeds: [
           new MessageEmbed()
             .setTitle(`${emoji.wrong} An error occurred while evaluating your code.`)

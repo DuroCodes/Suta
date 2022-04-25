@@ -20,7 +20,7 @@ export class UserListener extends Listener {
     if (interaction.isAutocomplete()) {
       if (interaction.commandName === 'category') {
         const guildData = await GuildSchema.findOne({ guildId: interaction.guildId });
-        if (!guildData) return;
+        if (!guildData || !guildData.ticketCategories) return interaction.respond([{ name: 'No Categories Found', value: '' }]);
 
         const { ticketCategories } = guildData;
 

@@ -42,7 +42,6 @@ export class UserCommand extends Command {
         ephemeral: true,
       });
     } catch (err) {
-      console.log(err);
       return interaction.reply({
         embeds: [
           new MessageEmbed()

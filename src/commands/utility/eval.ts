@@ -42,8 +42,8 @@ export class UserCommand extends Command {
         ephemeral: true,
       });
     } catch (err) {
-      interaction.deferReply();
-      return interaction.followUp({
+      console.log(err);
+      return interaction.reply({
         embeds: [
           new MessageEmbed()
             .setTitle(`${emoji.wrong} An error occurred while evaluating your code.`)

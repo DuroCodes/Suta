@@ -42,6 +42,7 @@ export class UserCommand extends Command {
         ephemeral: true,
       });
     } catch (err) {
+      interaction.deferReply();
       return interaction.followUp({
         embeds: [
           new MessageEmbed()

@@ -19,12 +19,9 @@ module.exports = {
     'import/no-unresolved': 'off',
     'import/extensions': 'off',
     'no-unused-vars': 'off',
-    'no-void': 'off',
     'class-methods-use-this': 'off',
     'no-inner-declarations': 'off',
     'consistent-return': 'off',
     'no-shadow': 'off',
-    'no-useless-return': 'off',
-    'max-len': 'off',
   },
 };

@@ -1,5 +1,12 @@
 import {
-  ColorResolvable, CommandInteraction, Guild, GuildMember, MessageActionRow, MessageEmbed, MessageSelectMenu, TextChannel, User,
+  ColorResolvable,
+  CommandInteraction,
+  Guild, GuildMember,
+  MessageActionRow,
+  MessageEmbed,
+  MessageSelectMenu,
+  TextChannel,
+  User,
 } from 'discord.js';
 import type { ApplicationCommandRegistry, CommandOptions } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';

@@ -1,5 +1,13 @@
 import {
-  CategoryChannel, ColorResolvable, Interaction, MessageActionRow, MessageButton, MessageEmbed, TextChannel, Guild, ApplicationCommandOptionChoice,
+  CategoryChannel,
+  ColorResolvable,
+  Interaction,
+  MessageActionRow,
+  MessageButton,
+  MessageEmbed,
+  TextChannel,
+  Guild,
+  ApplicationCommandOptionChoice,
 } from 'discord.js';
 import { Listener, type ListenerOptions } from '@sapphire/framework';
 import { ApplyOptions } from '@sapphire/decorators';
@@ -42,7 +50,9 @@ export class UserListener extends Listener {
         if (!guildData) guildData = new GuildSchema({ guildId });
 
         const { tickets } = guildData;
-        const ticket = tickets.find((t: Ticket) => t.creatorId === user.id && t.channelId === interaction.channelId);
+        const ticket = tickets.find((
+          t: Ticket,
+        ) => t.creatorId === user.id && t.channelId === interaction.channelId);
 
         if (!ticket) {
           return interaction.reply({
@@ -93,7 +103,14 @@ export class UserListener extends Listener {
       const menuMessage = await menuChannel?.messages.fetch(interaction.message.id);
       menuMessage.edit({ components: menuMessage.components });
 
-      if (!ticketCategory || !ticketCategories || !maxTickets || !supportRole || !adminRole || !loggingChannel) {
+      if (
+        !ticketCategory
+        || !ticketCategories
+        || !maxTickets
+        || !supportRole
+        || !adminRole
+        || !loggingChannel
+      ) {
         return interaction.reply({
           embeds: [
             new MessageEmbed()
@@ -117,7 +134,10 @@ export class UserListener extends Listener {
         });
       }
 
-      const category = ticketCategories.find((c: TicketCategory) => c.name === interaction.values[0]?.substring(7));
+      const category = ticketCategories.find((
+        c: TicketCategory,
+      ) => c.name === interaction.values[0]?.substring(7));
+
       if (!category) {
         return interaction.reply({
           embeds: [

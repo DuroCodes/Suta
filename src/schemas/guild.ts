@@ -11,7 +11,7 @@ interface GuildSchema {
   maxTickets?: number;
   loggingEnabled?: boolean;
   loggingChannel?: string;
-  ticketMenu?: TicketMenu
+  ticketMenu?: TicketMenu;
   ticketCategories?: TicketCategory[];
   tickets: Ticket[];
 }

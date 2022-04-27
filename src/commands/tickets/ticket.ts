@@ -17,6 +17,7 @@ import emoji from '../../util/emoji.json';
 import { TicketCategory } from '../../typings/category';
 import { Ticket } from '../../typings/ticket';
 import { TicketMenu } from '../../typings/menu';
+import guildSchema from '../../typings/guild';
 
 @ApplyOptions<CommandOptions>({
   chatInputCommand: {
@@ -140,7 +141,7 @@ export class UserCommand extends Command {
         });
       }
 
-      const { tickets } = guildData as any;
+      const { tickets } = guildData as guildSchema;
 
       if (!tickets.find((t: Ticket) => t.channelId === interaction.channelId)) {
         return interaction.reply({
@@ -154,7 +155,7 @@ export class UserCommand extends Command {
       }
 
       const ticket = tickets.find((t: Ticket) => t.channelId === interaction.channelId);
-      if (ticket.addedUsers.includes(user.id)) {
+      if (ticket?.addedUsers?.includes(user.id)) {
         return interaction.reply({
           embeds: [
             new MessageEmbed()
@@ -165,7 +166,7 @@ export class UserCommand extends Command {
         });
       }
 
-      ticket.addedUsers.push((user.id).toString());
+      ticket?.addedUsers?.push((user.id).toString());
       await guildData?.save();
 
       const channel = interaction?.channel as TextChannel;
@@ -218,7 +219,7 @@ export class UserCommand extends Command {
         });
       }
 
-      ticket.addedUsers.pull((user.id).toString());
+      ticket?.addedUsers?.pull((user.id).toString());
       await guildData?.save();
 
       const channel = interaction?.channel as TextChannel;

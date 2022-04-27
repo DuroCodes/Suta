@@ -1,24 +1,7 @@
-import { Document, Schema, model } from 'mongoose';
-import { TicketCategory } from '../typings/category';
-import { Ticket } from '../typings/ticket';
-import { TicketMenu } from '../typings/menu';
+import { Schema, model } from 'mongoose';
+import GuildSchema from '../typings/guild';
 
-interface GuildSchema {
-  guildId?: string;
-  adminRole?: string;
-  supportRole?: string;
-  ticketCategory?: string;
-  maxTickets?: number;
-  loggingEnabled?: boolean;
-  loggingChannel?: string;
-  ticketMenu?: TicketMenu;
-  ticketCategories?: TicketCategory[];
-  tickets: Ticket[];
-}
-
-interface GuildModel extends GuildSchema, Document { }
-
-const guildSchema = new Schema({
+const guildSchema = new Schema<GuildSchema>({
   guildId: String,
   adminRole: String,
   supportRole: String,
@@ -52,4 +35,4 @@ const guildSchema = new Schema({
   }],
 });
 
-export default model<GuildModel>('model', guildSchema);
+export default model<GuildSchema>('model', guildSchema);

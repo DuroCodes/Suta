@@ -2,7 +2,7 @@ import { TicketMenu } from './menu';
 import { TicketCategory } from './category';
 import { Ticket } from './ticket';
 
-export default interface GuildSchema {
+interface GuildSchema {
   guildId?: string;
   adminRole?: string;
   supportRole?: string;
@@ -14,3 +14,5 @@ export default interface GuildSchema {
   ticketCategories?: TicketCategory[];
   tickets: Ticket[];
 }
+
+export default GuildSchema;

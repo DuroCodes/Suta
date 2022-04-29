@@ -32,13 +32,10 @@ export class UserListener extends Listener {
 
         const { ticketCategories } = guildData;
 
-        const choices: ApplicationCommandOptionChoice[] = [];
-        ticketCategories?.forEach(({ name }: TicketCategory) => {
-          choices.push({
-            name: name as string,
-            value: name as string,
-          });
-        });
+        const choices = ticketCategories.map(
+          ({ name }) => ({ value: name, name }),
+        ) as ApplicationCommandOptionChoice[];
+
         return interaction.respond(choices);
       }
     }

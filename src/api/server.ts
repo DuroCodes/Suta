@@ -1,15 +1,15 @@
 import { container } from '@sapphire/framework';
 import { bold } from 'chalk';
 import fastify from 'fastify';
-import { client } from './main';
-import { env } from './lib';
+import { client } from '../main';
+import { env } from '../lib';
 
 interface Data {
   servers: number;
   users: number;
 }
 
-export default function startServer() {
+export default async function startServer() {
   const app = fastify();
   const port = env.PORT || 3000;
 

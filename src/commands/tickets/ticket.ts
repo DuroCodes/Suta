@@ -9,6 +9,7 @@ import {
   User,
 } from 'discord.js';
 import type { ApplicationCommandRegistry, CommandOptions } from '@sapphire/framework';
+import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@sapphire/framework';
 import GuildSchema from '../../schemas/guild';
@@ -438,41 +439,70 @@ export class UserCommand extends Command {
   }
 
   public override registerApplicationCommands(registry: ApplicationCommandRegistry) {
-    registry.registerChatInputCommand((builder) => builder
-      .setName(this.name)
-      .setDescription(this.description)
-      .addSubcommand((sub) => sub
-        .setName('menu')
-        .setDescription('Create a ticket creation menu.'))
-      .addSubcommand((sub) => sub
-        .setName('add')
-        .setDescription('Add a user to the current ticket')
-        .addUserOption((user) => user
-          .setName('user')
-          .setDescription('The user to add to the ticket.')
-          .setRequired(true)))
-      .addSubcommand((sub) => sub
-        .setName('remove')
-        .setDescription('Remove a user from the ticket.')
-        .addUserOption((user) => user
-          .setName('user')
-          .setDescription('The user to remove from the ticket.')
-          .setRequired(true)))
-      .addSubcommand((sub) => sub
-        .setName('claim')
-        .setDescription('Claim the ticket.'))
-      .addSubcommand((sub) => sub
-        .setName('unclaim')
-        .setDescription('Unclaim the ticket.'))
-      .addSubcommand((sub) => sub
-        .setName('rename')
-        .setDescription('Rename the ticket.')
-        .addStringOption((string) => string
-          .setName('name')
-          .setDescription('The new name for the ticket.')
-          .setRequired(true)))
-      .addSubcommand((sub) => sub
-        .setName('close')
-        .setDescription('Close the ticket.')));
+    registry.registerChatInputCommand({
+      name: this.name,
+      description: this.description,
+      options: [
+        {
+          type: ApplicationCommandOptionTypes.SUB_COMMAND,
+          name: 'menu',
+          description: 'Create a ticket creation menu.',
+        },
+        {
+          type: ApplicationCommandOptionTypes.SUB_COMMAND,
+          name: 'add',
+          description: 'Add a user to the current ticket',
+          options: [
+            {
+              name: 'user',
+              description: 'The user to add to the ticket.',
+              required: true,
+              type: ApplicationCommandOptionTypes.USER,
+            },
+          ],
+        },
+        {
+          type: ApplicationCommandOptionTypes.SUB_COMMAND,
+          name: 'remove',
+          description: 'Remove a user from the ticket.',
+          options: [
+            {
+              name: 'user',
+              description: 'The user to remove from the ticket.',
+              required: true,
+              type: ApplicationCommandOptionTypes.USER,
+            },
+          ],
+        },
+        {
+          type: ApplicationCommandOptionTypes.SUB_COMMAND,
+          name: 'claim',
+          description: 'Claim the ticket.',
+        },
+        {
+          type: ApplicationCommandOptionTypes.SUB_COMMAND,
+          name: 'unclaim',
+          description: 'Unclaim the ticket.',
+        },
+        {
+          type: ApplicationCommandOptionTypes.SUB_COMMAND,
+          name: 'rename',
+          description: 'Rename the ticket.',
+          options: [
+            {
+              type: ApplicationCommandOptionTypes.STRING,
+              name: 'name',
+              description: 'The new name for the ticket.',
+              required: true,
+            },
+          ],
+        },
+        {
+          type: ApplicationCommandOptionTypes.SUB_COMMAND,
+          name: 'close',
+          description: 'Close the ticket.',
+        },
+      ],
+    });
   }
 }

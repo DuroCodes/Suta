@@ -1,5 +1,6 @@
 import type { ApplicationCommandRegistry, CommandOptions } from '@sapphire/framework';
 import { ColorResolvable, CommandInteraction, MessageEmbed } from 'discord.js';
+import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@sapphire/framework';
 import colors from '../../util/colors.json';
@@ -55,13 +56,17 @@ export class UserCommand extends Command {
   }
 
   public override registerApplicationCommands(registry: ApplicationCommandRegistry) {
-    registry.registerChatInputCommand((builder) => builder
-      .setName(this.name)
-      .setDescription(this.description)
-      .setDefaultPermission(true)
-      .addStringOption((option) => option
-        .setName('code')
-        .setDescription('Code to evaluate.')
-        .setRequired(true)));
+    registry.registerChatInputCommand({
+      name: this.name,
+      description: this.description,
+      options: [
+        {
+          type: ApplicationCommandOptionTypes.STRING,
+          name: 'code',
+          description: 'Code to evaluate.',
+          required: true,
+        },
+      ],
+    });
   }
 }

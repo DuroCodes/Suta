@@ -2,6 +2,7 @@ import {
   ColorResolvable, CommandInteraction, GuildMember, MessageEmbed,
 } from 'discord.js';
 import { ApplicationCommandRegistry, Command, CommandOptions } from '@sapphire/framework';
+import { ApplicationCommandOptionTypes, ChannelTypes } from 'discord.js/typings/enums';
 import { ApplyOptions } from '@sapphire/decorators';
 import GuildSchema from '../../schemas/guild';
 import colors from '../../util/colors.json';
@@ -178,75 +179,140 @@ The logging channel has been updated.
   }
 
   public override registerApplicationCommands(registry: ApplicationCommandRegistry) {
-    registry.registerChatInputCommand((builder) => builder
-      .setName(this.name)
-      .setDescription(this.description)
-      .addSubcommand((logs) => logs
-        .setName('logs')
-        .setDescription('Set options for the logging system.')
-        .addBooleanOption((bol) => bol
-          .setName('enabled')
-          .setDescription('Enable logging.')
-          .setRequired(true))
-        .addChannelOption((cha) => cha
-          .setName('channel')
-          .setDescription('The channel to log to.')
-          .addChannelTypes(0)))
-      .addSubcommand((sub) => sub
-        .setName(Subcommand.SupportRole)
-        .setDescription('Set the support role for the ticket system.')
-        .addRoleOption((role) => role
-          .setName(Subcommand.SupportRole)
-          .setDescription('The role to use for support tickets.')
-          .setRequired(true)))
-      .addSubcommand((sub) => sub
-        .setName(Subcommand.MaxTickets)
-        .setDescription('Set the support role for the ticket system.')
-        .addIntegerOption((int) => int
-          .setName(Subcommand.MaxTickets)
-          .setDescription('The maximum number of tickets per person.')
-          .setRequired(true)))
-      .addSubcommand((sub) => sub
-        .setName(Subcommand.AdminRole)
-        .setDescription('Set the admin role for the ticket system.')
-        .addRoleOption((role) => role
-          .setName(Subcommand.AdminRole)
-          .setDescription('The role to use for ticket admins.')
-          .setRequired(true)))
-      .addSubcommand((sub) => sub
-        .setName(Subcommand.Category)
-        .setDescription('Set the category for the ticket system.')
-        .addChannelOption((option) => option
-          .setName(Subcommand.Category)
-          .setDescription('The category to use for tickets.')
-          .setRequired(true)
-          .addChannelTypes(4)))
-      .addSubcommand((sub) => sub
-        .setName(Subcommand.Menu)
-        .setDescription('Change the appearance of the ticket menu.')
-        .addStringOption((option) => option
-          .setName('title')
-          .setDescription('The title of the ticket menu.')
-          .setRequired(true))
-        .addChannelOption((option) => option
-          .setName('channel')
-          .setDescription('The channel to send the ticket menu to.')
-          .setRequired(true)
-          .addChannelTypes(0))
-        .addStringOption((option) => option
-          .setName('description')
-          .setDescription('The description of the ticket menu.'))
-        .addStringOption((option) => option
-          .setName('footer')
-          .setDescription('The footer of the ticket menu.'))
-        .addStringOption((option) => option
-          .setName('color')
-          .setDescription('The color of the ticket menu.'))
-        .addBooleanOption((option) => option
-          .setName('show-description')
-          .setDescription('Whether or not to show the description of the ticket menu.'))
-        .addBooleanOption((option) => option
-          .setName('timestamp')
-          .setDescription('Whether or not to show the timestamp of the ticket menu.'))));
+    registry.registerChatInputCommand({
+      name: this.name,
+      description: this.description,
+      options: [
+        {
+          type: ApplicationCommandOptionTypes.SUB_COMMAND,
+          name: 'logs',
+          description: 'Set options for the logging system.',
+          options: [
+            {
+              name: 'enabled',
+              description: 'Enable logging.',
+              required: true,
+              type: ApplicationCommandOptionTypes.BOOLEAN,
+            },
+            {
+              channel_types: [
+                ChannelTypes.GUILD_TEXT,
+              ],
+              name: 'channel',
+              description: 'The channel to log to.',
+              required: false,
+              type: ApplicationCommandOptionTypes.CHANNEL,
+            },
+          ],
+        },
+        {
+          type: ApplicationCommandOptionTypes.SUB_COMMAND,
+          name: 'support-role',
+          description: 'Set the support role for the ticket system.',
+          options: [
+            {
+              name: 'support-role',
+              description: 'The role to use for support tickets.',
+              required: true,
+              type: ApplicationCommandOptionTypes.ROLE,
+            },
+          ],
+        },
+        {
+          type: ApplicationCommandOptionTypes.SUB_COMMAND,
+          name: 'max-tickets',
+          description: 'Set the support role for the ticket system.',
+          options: [
+            {
+              type: ApplicationCommandOptionTypes.INTEGER,
+              name: 'max-tickets',
+              description: 'The maximum number of tickets per person.',
+              required: true,
+            },
+          ],
+        },
+        {
+          type: ApplicationCommandOptionTypes.SUB_COMMAND,
+          name: 'admin-role',
+          description: 'Set the admin role for the ticket system.',
+          options: [
+            {
+              name: 'admin-role',
+              description: 'The role to use for ticket admins.',
+              required: true,
+              type: ApplicationCommandOptionTypes.ROLE,
+            },
+          ],
+        },
+        {
+          type: ApplicationCommandOptionTypes.SUB_COMMAND,
+          name: 'category',
+          description: 'Set the category for the ticket system.',
+          options: [
+            {
+              channel_types: [
+                ChannelTypes.GUILD_CATEGORY,
+              ],
+              name: 'category',
+              description: 'The category to use for tickets.',
+              required: true,
+              type: ApplicationCommandOptionTypes.CHANNEL,
+            },
+          ],
+        },
+        {
+          type: ApplicationCommandOptionTypes.SUB_COMMAND,
+          name: 'menu',
+          description: 'Change the appearance of the ticket menu.',
+          options: [
+            {
+              type: ApplicationCommandOptionTypes.STRING,
+              name: 'title',
+              description: 'The title of the ticket menu.',
+              required: true,
+            },
+            {
+              channel_types: [
+                ChannelTypes.GUILD_TEXT,
+              ],
+              name: 'channel',
+              description: 'The channel to send the ticket menu to.',
+              required: true,
+              type: ApplicationCommandOptionTypes.CHANNEL,
+            },
+            {
+              type: ApplicationCommandOptionTypes.STRING,
+              name: 'description',
+              description: 'The description of the ticket menu.',
+              required: false,
+            },
+            {
+              type: ApplicationCommandOptionTypes.STRING,
+              name: 'footer',
+              description: 'The footer of the ticket menu.',
+              required: false,
+            },
+            {
+              type: ApplicationCommandOptionTypes.STRING,
+              name: 'color',
+              description: 'The color of the ticket menu.',
+              required: false,
+            },
+            {
+              name: 'show-description',
+              description: 'Whether or not to show the description of the ticket menu.',
+              required: false,
+              type: ApplicationCommandOptionTypes.BOOLEAN,
+            },
+            {
+              name: 'timestamp',
+              description: 'Whether or not to show the timestamp of the ticket menu.',
+              required: false,
+              type: ApplicationCommandOptionTypes.BOOLEAN,
+            },
+          ],
+        },
+      ],
+    });
   }
 }

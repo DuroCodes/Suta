@@ -6,6 +6,7 @@ import {
   Util,
 } from 'discord.js';
 import type { ApplicationCommandRegistry, CommandOptions } from '@sapphire/framework';
+import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@sapphire/framework';
 import GuildSchema from '../../schemas/guild';
@@ -299,64 +300,104 @@ The category \`${oldName}\` has been edited.
   }
 
   public override registerApplicationCommands(registry: ApplicationCommandRegistry) {
-    registry.registerChatInputCommand((builder) => builder
-      .setName(this.name)
-      .setDescription(this.description)
-      .addSubcommand((sub) => sub
-        .setName('add')
-        .setDescription('Add a category to the ticket system.')
-        .addStringOption((cat) => cat
-          .setName('name')
-          .setDescription('The name of the category to add to the ticket system.')
-          .setRequired(true))
-        .addStringOption((desc) => desc
-          .setName('description')
-          .setDescription('The description of the category.')
-          .setRequired(true))
-        .addStringOption((emoji) => emoji
-          .setName('emoji')
-          .setDescription('The emoji to use for the category.')
-          .setRequired(true))
-        .addStringOption((desc) => desc
-          .setName('embed-desc')
-          .setDescription('The description of the embed in a ticket.')
-          .setRequired(false))
-        .addStringOption((desc) => desc
-          .setName('embed-message')
-          .setDescription('The message send along with the embed in a ticket.')))
-      .addSubcommand((sub) => sub
-        .setName('edit')
-        .setDescription('Edit a category in the ticket system.')
-        .addStringOption((cat) => cat
-          .setName('old-name')
-          .setDescription('The name of the category to edit to the ticket system.')
-          .setRequired(true)
-          .setAutocomplete(true))
-        .addStringOption((desc) => desc
-          .setName('new-name')
-          .setDescription('The new name of the category.'))
-        .addStringOption((emoji) => emoji
-          .setName('description')
-          .setDescription('The new description of the category.'))
-        .addStringOption((emoji) => emoji
-          .setName('emoji')
-          .setDescription('The new emoji of the category.'))
-        .addStringOption((desc) => desc
-          .setName('embed-desc')
-          .setDescription('The new description of the embed in a ticket.'))
-        .addStringOption((tit) => tit
-          .setName('embed-message')
-          .setDescription('The new message send along with the embed in a ticket.')))
-      .addSubcommand((sub) => sub
-        .setName('delete')
-        .setDescription('Delete a category in the ticket system.')
-        .addStringOption((cat) => cat
-          .setName('name')
-          .setDescription('The name of the category to delete.')
-          .setAutocomplete(true)
-          .setRequired(true)))
-      .addSubcommand((sub) => sub
-        .setName('list')
-        .setDescription('List all categories in the ticket system.')));
+    registry.registerChatInputCommand({
+      name: this.name,
+      description: this.description,
+      options: [
+        {
+          type: ApplicationCommandOptionTypes.SUB_COMMAND,
+          name: 'add',
+          description: 'Add a category to the ticket system.',
+          options: [
+            {
+              type: ApplicationCommandOptionTypes.STRING,
+              name: 'name',
+              description: 'The name of the category to add to the ticket system.',
+              required: true,
+            },
+            {
+              type: ApplicationCommandOptionTypes.STRING,
+              name: 'description',
+              description: 'The description of the category.',
+              required: true,
+            },
+            {
+              type: ApplicationCommandOptionTypes.STRING,
+              name: 'emoji',
+              description: 'The emoji to use for the category.',
+              required: true,
+            },
+            {
+              type: ApplicationCommandOptionTypes.STRING,
+              name: 'embed-desc',
+              description: 'The description of the embed in a ticket.',
+            },
+            {
+              type: ApplicationCommandOptionTypes.STRING,
+              name: 'embed-message',
+              description: 'The message send along with the embed in a ticket.',
+            },
+          ],
+        },
+        {
+          type: ApplicationCommandOptionTypes.SUB_COMMAND,
+          name: 'edit',
+          description: 'Edit a category in the ticket system.',
+          options: [
+            {
+              autocomplete: true,
+              type: ApplicationCommandOptionTypes.STRING,
+              name: 'old-name',
+              description: 'The name of the category to edit to the ticket system.',
+              required: true,
+            },
+            {
+              type: ApplicationCommandOptionTypes.STRING,
+              name: 'new-name',
+              description: 'The new name of the category.',
+            },
+            {
+              type: ApplicationCommandOptionTypes.STRING,
+              name: 'description',
+              description: 'The new description of the category.',
+            },
+            {
+              type: ApplicationCommandOptionTypes.STRING,
+              name: 'emoji',
+              description: 'The new emoji of the category.',
+            },
+            {
+              type: ApplicationCommandOptionTypes.STRING,
+              name: 'embed-desc',
+              description: 'The new description of the embed in a ticket.',
+            },
+            {
+              type: ApplicationCommandOptionTypes.STRING,
+              name: 'embed-message',
+              description: 'The new message send along with the embed in a ticket.',
+            },
+          ],
+        },
+        {
+          type: ApplicationCommandOptionTypes.SUB_COMMAND,
+          name: 'delete',
+          description: 'Delete a category in the ticket system.',
+          options: [
+            {
+              autocomplete: true,
+              type: ApplicationCommandOptionTypes.STRING,
+              name: 'name',
+              description: 'The name of the category to delete.',
+              required: true,
+            },
+          ],
+        },
+        {
+          type: ApplicationCommandOptionTypes.SUB_COMMAND,
+          name: 'list',
+          description: 'List all categories in the ticket system.',
+        },
+      ],
+    });
   }
 }

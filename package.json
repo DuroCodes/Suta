@@ -7,7 +7,6 @@
     "start": "tsc && ts-node src/main.ts"
   },
   "dependencies": {
-    "@discordjs/builders": "^0.13.0",
     "@sapphire/decorators": "^4.3.3",
     "@sapphire/discord.js-utilities": "^4.9.3",
     "@sapphire/fetch": "^2.3.1",

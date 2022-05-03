@@ -10,13 +10,11 @@ import colors from '../../util/colors.json';
 import formatBytes from '../../lib/formatBytes';
 
 @ApplyOptions<CommandOptions>({
-  chatInputCommand: {
-    register: true,
-  },
-  description: 'Get information about the bot.',
-  enabled: true,
   name: 'info',
+  description: 'Get information about the bot.',
   fullCategory: ['Information', 'Utility'],
+  enabled: true,
+  chatInputCommand: { register: true },
 })
 
 export class UserCommand extends Command {

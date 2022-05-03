@@ -21,14 +21,12 @@ import { TicketMenu } from '../../typings/menu';
 import guildSchema from '../../typings/guild';
 
 @ApplyOptions<CommandOptions>({
-  chatInputCommand: {
-    register: true,
-  },
-  description: 'Commands for tickets.',
-  enabled: true,
   name: 'ticket',
+  description: 'Commands for tickets.',
   fullCategory: ['Tickets'],
   runIn: ['GUILD_ANY'],
+  enabled: true,
+  chatInputCommand: { register: true },
 })
 
 export class UserCommand extends Command {

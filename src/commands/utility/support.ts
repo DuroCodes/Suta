@@ -11,14 +11,12 @@ import { Command } from '@sapphire/framework';
 import colors from '../../util/colors.json';
 
 @ApplyOptions<CommandOptions>({
-  chatInputCommand: {
-    register: true,
-  },
-  description: 'Get support for Suta.',
-  enabled: true,
   name: 'support',
+  description: 'Get support for Suta.',
   fullCategory: ['Information', 'Utility'],
   runIn: ['GUILD_ANY'],
+  enabled: true,
+  chatInputCommand: { register: true },
 })
 
 export class UserCommand extends Command {

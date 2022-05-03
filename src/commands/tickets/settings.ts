@@ -18,14 +18,12 @@ const enum Subcommand {
 }
 
 @ApplyOptions<CommandOptions>({
-  chatInputCommand: {
-    register: true,
-  },
-  description: 'Customize settings for the ticket system.',
-  enabled: true,
   name: 'settings',
+  description: 'Customize settings for the ticket system.',
   fullCategory: ['Tickets'],
   runIn: ['GUILD_ANY'],
+  enabled: true,
+  chatInputCommand: { register: true },
 })
 
 export class UserCommand extends Command {

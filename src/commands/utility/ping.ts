@@ -10,14 +10,12 @@ import { Command } from '@sapphire/framework';
 import colors from '../../util/colors.json';
 
 @ApplyOptions<CommandOptions>({
-  chatInputCommand: {
-    register: true,
-  },
-  description: 'Get the bot\'s latency.',
-  enabled: true,
   name: 'ping',
+  description: 'Get the bot\'s latency.',
   fullCategory: ['Information', 'Utility'],
   runIn: ['GUILD_ANY'],
+  enabled: true,
+  chatInputCommand: { register: true },
 })
 
 export class UserCommand extends Command {

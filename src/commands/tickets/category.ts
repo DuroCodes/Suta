@@ -15,14 +15,12 @@ import emoji from '../../util/emoji.json';
 import { TicketCategory } from '../../typings/category';
 
 @ApplyOptions<CommandOptions>({
-  chatInputCommand: {
-    register: true,
-  },
-  description: 'Customize a category.',
-  enabled: true,
   name: 'category',
+  description: 'Customize a category.',
   fullCategory: ['Tickets'],
   runIn: ['GUILD_ANY'],
+  enabled: true,
+  chatInputCommand: { register: true },
 })
 
 export class UserCommand extends Command {

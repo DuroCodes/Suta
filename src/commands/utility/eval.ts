@@ -8,13 +8,11 @@ import emoji from '../../util/emoji.json';
 import { env } from '../../lib';
 
 @ApplyOptions<CommandOptions>({
-  chatInputCommand: {
-    register: true,
-  },
-  description: 'Evaluate code with Suta.',
-  enabled: true,
   name: 'eval',
+  description: 'Evaluate code with Suta.',
   fullCategory: ['Utility', 'Administration'],
+  enabled: true,
+  chatInputCommand: { register: true },
 })
 
 export class UserCommand extends Command {

@@ -9,7 +9,7 @@ interface Data {
   users: number;
 }
 
-export default async function startServer() {
+export default async () => {
   const app = fastify();
   const port = env.PORT || 3000;
 
@@ -25,4 +25,4 @@ export default async function startServer() {
   app.listen(port, '0.0.0.0', () => {
     container.logger.info(`Listening on port ${bold(port)} 🚀`);
   });
-}
+};

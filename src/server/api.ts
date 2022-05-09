@@ -18,7 +18,7 @@ export default async () => {
     rep.type('application/json').code(200);
     return {
       servers: client.guilds.cache.size,
-      users: client.users.cache.size,
+      users: client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0),
     } as Data;
   });
 

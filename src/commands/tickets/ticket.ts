@@ -441,18 +441,6 @@ To view the transcript, click [here](http://api.suta.tk/transcripts/${(interacti
 
           await guildData.save();
 
-          interaction.user.send({
-            embeds: [
-              new MessageEmbed()
-                .setTitle(`${emoji.ticket} Ticket Closed`)
-                .setColor(colors.invisible as ColorResolvable)
-                .setDescription(`\
-  ${interaction.user} closed the ticket \`#${(channel as TextChannel).name}\`.
-  To view the transcript, click [here](http://api.suta.tk/transcripts/${(channel as TextChannel).id}).`)
-                .setTimestamp(),
-            ],
-          }).catch(() => { });
-
           channel.delete('Suta 💫 | Ticket Closed').catch(() => {
             channel.send({
               embeds: [

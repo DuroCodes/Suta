@@ -366,7 +366,7 @@ export class UserCommand extends Command {
 
     async function close() {
       const { tickets } = guildData as any;
-<<<<<<< HEAD
+
       const ticket: Ticket = tickets.find((t: Ticket) => t.channelId === interaction.channelId);
       if (!ticket) {
         return interaction.reply({
@@ -423,7 +423,7 @@ Join our support server for more information. (\`/support\`)`),
           ],
         });
       });
-=======
+
       interaction.channel?.delete('Suta | Closed Ticket')
         .then(async () => {
           const channel = interaction.channel as TextChannel;
@@ -484,7 +484,6 @@ Please join our support server for more information. \`/support\``),
             ephemeral: true,
           });
         });
->>>>>>> 21af5e19e6ce18c3eb81eba0f7f045266522c7b8
     }
 
     switch (interaction.options.getSubcommand(true)) {

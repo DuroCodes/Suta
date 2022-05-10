@@ -10,6 +10,7 @@ import {
   ApplicationCommandOptionChoice,
 } from 'discord.js';
 import { Listener, type ListenerOptions } from '@sapphire/framework';
+import { createTranscript } from 'discord-html-transcripts';
 import { ApplyOptions } from '@sapphire/decorators';
 import { TicketCategory } from '../typings/category';
 import { Ticket } from '../typings/ticket';
@@ -63,21 +64,33 @@ export class UserListener extends Listener {
         }
 
         (tickets as any).pull(ticket);
-        await guildData.save();
 
         if (guildData.loggingEnabled && guildData.loggingChannel) {
           const guild = interaction.guild as Guild;
           const loggingChannel = guild.channels.cache.get(guildData.loggingChannel);
           if (loggingChannel instanceof TextChannel) {
-            const embed = new MessageEmbed()
-              .setTitle(`${emoji.ticket} Ticket Closed`)
-              .setColor(colors.invisible as ColorResolvable)
-              .setDescription(`${user} closed the ticket \`#${(channel as TextChannel).name}\`.`)
-              .setTimestamp();
-
-            await loggingChannel.send({ embeds: [embed] });
+            await loggingChannel.send({
+              embeds: [
+                new MessageEmbed()
+                  .setTitle(`${emoji.ticket} Ticket Closed`)
+                  .setColor(colors.invisible as ColorResolvable)
+                  .setDescription(`${user} closed the ticket \`#${(channel as TextChannel).name}\`.`)
+                  .setTimestamp(),
+              ],
+            });
           }
         }
+
+        const transcript = await createTranscript(channel as TextChannel, {
+          returnType: 'string',
+          minify: true,
+        });
+
+        guildData?.transcripts?.push({
+          name: (channel as TextChannel).id, data: transcript as string,
+        });
+
+        await guildData.save();
 
         channel?.delete('Suta | Closed Ticket');
       }
@@ -238,13 +251,15 @@ export class UserListener extends Listener {
           const guild = interaction.guild as Guild;
           const loggingChannel = guild.channels.cache.get(guildData.loggingChannel);
           if (loggingChannel instanceof TextChannel) {
-            const embed = new MessageEmbed()
-              .setTitle(`${emoji.ticket} Ticket Opened`)
-              .setColor(colors.invisible as ColorResolvable)
-              .setDescription(`${user} opened a ticket \`#${newChannel.name}\`.`)
-              .setTimestamp();
-
-            await loggingChannel.send({ embeds: [embed] });
+            await loggingChannel.send({
+              embeds: [
+                new MessageEmbed()
+                  .setTitle(`${emoji.ticket} Ticket Opened`)
+                  .setColor(colors.invisible as ColorResolvable)
+                  .setDescription(`${user} opened a ticket \`#${newChannel.name}\`.`)
+                  .setTimestamp(),
+              ],
+            });
           }
         }
       });

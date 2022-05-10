@@ -9,6 +9,11 @@ const guildSchema = new Schema<GuildSchema>({
   maxTickets: Number,
   loggingEnabled: Boolean,
   loggingChannel: String,
+  transcriptsEnabled: Boolean,
+  transcripts: [{
+    name: String,
+    data: String,
+  }],
   ticketMenu: {
     title: String,
     description: String,

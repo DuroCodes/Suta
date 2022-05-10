@@ -1,5 +1,6 @@
-import { TicketMenu } from './menu';
 import { TicketCategory } from './category';
+import { Transcript } from './transcript';
+import { TicketMenu } from './menu';
 import { Ticket } from './ticket';
 
 interface GuildSchema {
@@ -10,6 +11,8 @@ interface GuildSchema {
   maxTickets?: number;
   loggingEnabled?: boolean;
   loggingChannel?: string;
+  transcriptsEnabled?: boolean;
+  transcripts?: Transcript[];
   ticketMenu?: TicketMenu;
   ticketCategories?: TicketCategory[];
   tickets: Ticket[];

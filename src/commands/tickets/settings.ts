@@ -183,7 +183,20 @@ The logging channel has been updated.
       options: [
         {
           type: ApplicationCommandOptionTypes.SUB_COMMAND,
-          name: 'logs',
+          name: 'transcripts',
+          description: 'Set options for transcripts.',
+          options: [
+            {
+              name: 'enabled',
+              description: 'Enable transcripts.',
+              required: true,
+              type: ApplicationCommandOptionTypes.BOOLEAN,
+            },
+          ],
+        },
+        {
+          type: ApplicationCommandOptionTypes.SUB_COMMAND,
+          name: Subcommand.Logs,
           description: 'Set options for the logging system.',
           options: [
             {
@@ -205,11 +218,11 @@ The logging channel has been updated.
         },
         {
           type: ApplicationCommandOptionTypes.SUB_COMMAND,
-          name: 'support-role',
+          name: Subcommand.SupportRole,
           description: 'Set the support role for the ticket system.',
           options: [
             {
-              name: 'support-role',
+              name: Subcommand.SupportRole,
               description: 'The role to use for support tickets.',
               required: true,
               type: ApplicationCommandOptionTypes.ROLE,
@@ -218,12 +231,12 @@ The logging channel has been updated.
         },
         {
           type: ApplicationCommandOptionTypes.SUB_COMMAND,
-          name: 'max-tickets',
+          name: Subcommand.MaxTickets,
           description: 'Set the support role for the ticket system.',
           options: [
             {
               type: ApplicationCommandOptionTypes.INTEGER,
-              name: 'max-tickets',
+              name: Subcommand.MaxTickets,
               description: 'The maximum number of tickets per person.',
               required: true,
             },
@@ -231,11 +244,11 @@ The logging channel has been updated.
         },
         {
           type: ApplicationCommandOptionTypes.SUB_COMMAND,
-          name: 'admin-role',
+          name: Subcommand.AdminRole,
           description: 'Set the admin role for the ticket system.',
           options: [
             {
-              name: 'admin-role',
+              name: Subcommand.AdminRole,
               description: 'The role to use for ticket admins.',
               required: true,
               type: ApplicationCommandOptionTypes.ROLE,
@@ -244,14 +257,14 @@ The logging channel has been updated.
         },
         {
           type: ApplicationCommandOptionTypes.SUB_COMMAND,
-          name: 'category',
+          name: Subcommand.Category,
           description: 'Set the category for the ticket system.',
           options: [
             {
               channel_types: [
                 ChannelTypes.GUILD_CATEGORY,
               ],
-              name: 'category',
+              name: Subcommand.Category,
               description: 'The category to use for tickets.',
               required: true,
               type: ApplicationCommandOptionTypes.CHANNEL,
@@ -260,7 +273,7 @@ The logging channel has been updated.
         },
         {
           type: ApplicationCommandOptionTypes.SUB_COMMAND,
-          name: 'menu',
+          name: Subcommand.Menu,
           description: 'Change the appearance of the ticket menu.',
           options: [
             {

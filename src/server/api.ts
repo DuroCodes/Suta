@@ -36,15 +36,10 @@ export default async () => {
     if (!channelId) return rep.code(400).send({ error: 'Missing query parameters. The channelId parameter is required. Example: /transcripts/<channelId>' });
     if (!data.length) return rep.code(404).send({ error: 'No data found' });
 
-    const transcriptData = data.filter(
-      ({ transcripts }) => transcripts?.find(({ name }) => name === channelId),
-    );
-
-    const transcript = transcriptData.map(
+    const transcript = data.map(
       ({ transcripts }) => transcripts?.find(({ name }) => name === channelId),
     )[0];
 
-    if (!transcriptData) return rep.code(404).send({ error: 'Channel not found' });
     if (!transcript) return rep.code(404).send({ error: 'Channel not found' });
 
     rep.header('Content-Type', 'text/html');

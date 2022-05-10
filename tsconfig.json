@@ -8,6 +8,7 @@
     "strict": true,
     "sourceMap": true,
     "resolveJsonModule": true,
+    "jsx": "react",
 
     /* Paths */
     "outDir": "./dist",

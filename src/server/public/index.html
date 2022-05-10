@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/public/styles/_abstract/root.css" />
+    <link rel="stylesheet" href="/public/styles/_components/navbar.css" />
+    <link rel="stylesheet" href="/public/styles/_components/badges.css" />
+    <link rel="stylesheet" href="/public/styles/_components/buttons.css" />
+    <link rel="stylesheet" href="/public/styles/_pages/home.css" />
+    <link
+      href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <meta content="Suta - Home" property="og:title" />
+    <meta
+      content="Suta is a simple, fast, and completely open source ticket bot for Discord."
+      property="og:description"
+    />
+    <meta
+      content="https://raw.githubusercontent.com/DuroCodes/Suta/master/assets/logo.png"
+      property="og:image"
+    />
+    <meta content="#2E3037" data-react-helmet="true" name="theme-color" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="upgrade-insecure-requests"
+    />
+    <title>Suta - Tickets Made Easy</title>
+    <link
+      rel="icon"
+      href="https://raw.githubusercontent.com/DuroCodes/Suta/master/assets/logo.png"
+    />
+  </head>
+  <body>
+    <div class="modules">
+      <div class="nav">
+        <head>
+          <meta charset="UTF-8" />
+          <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+          />
+          <title>Document</title>
+        </head>
+        <body>
+          <div class="nav__burger" id="burger">
+            <div class="burger__line" id="burger_first"></div>
+            <div class="burger__line" id="burger_last"></div>
+          </div>
+          <div class="nav" id="nav">
+            <div class="nav__inside">
+              <div class="nav__header">
+                <h1 class="nav__title">Suta</h1>
+                <p class="nav__about">Tickets Made Easy</p>
+              </div>
+              <div class="nav__list">
+                <ul>
+                  <li class="nav__item">
+                    <a href="/">Home</a>
+                  </li>
+                  <li class="nav__item">
+                    <a href="https://github.com/durocodes/suta/wiki">Wiki</a>
+                  </li>
+                </ul>
+              </div>
+              <div class="nav__buttons">
+                <a href="https://github.com/durocodes/suta/" class="nav__button"
+                  ><i class="bx bxl-github"></i
+                ></a>
+                <a href="https://discord.gg/8pQ4zRxevE" class="nav__button"
+                  ><i class="bx bxl-discord-alt"></i
+                ></a>
+              </div>
+            </div>
+          </div>
+        </body>
+        <script>
+          const burger = document.getElementById("burger");
+          const burgerLineFirst = document.getElementById("burger_first");
+          const burgerLineLast = document.getElementById("burger_last");
+          const navMenu = document.getElementById("nav");
+          burger.addEventListener("click", (e) => {
+            e.preventDefault();
+            navMenu.classList.toggle("nav__active");
+            burgerLineFirst.classList.toggle("burger__line__top");
+            burgerLineLast.classList.toggle("burger__line__bottom");
+          });
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+      </div>
+      <div class="main">
+        <div class="header">
+          <h2 class="badge beta">beta</h2>
+          <h1 class="title">
+            Improving your <span class="underline">Discord</span> experience!
+          </h1>
+          <p class="about">
+            Make tickets with ease using Suta. Suta is a simple, fast, and
+            completely open source ticket bot for Discord.
+          </p>
+          <div class="buttons">
+            <a
+              href="https://discord.com/api/oauth2/authorize?client_id=958173449338093578&permissions=8&scope=bot%20applications.commands"
+              class="btn primary"
+              >Invite</a
+            >
+            <a href="https://discord.gg/8pQ4zRxevE" class="btn primary"
+              >Support</a
+            >
+            <a
+              href="https://top.gg/bot/958173449338093578/vote"
+              class="btn primary"
+              >Vote</a
+            >
+          </div>
+        </div>
+        <div class="features">
+          <div class="features__header">
+            <h1 class="features__title">Features</h1>
+          </div>
+          <div class="divider"></div>
+          <div class="features__list">
+            <div class="feature">
+              <h1 class="feature__title">Tickets</h1>
+              <p class="feature__about">
+                Easy to use and full of customization! With Suta, you can create
+                ticket categories and custom options.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="stats">
+          <div class="stats__header">
+            <h1 class="stats__title">Statistics</h1>
+          </div>
+          <div class="divider"></div>
+          <div class="stats__list">
+            <div class="stat">
+              <h1 class="stat__title" id="servers"></h1>
+              <p class="stat__about">Total Servers</p>
+            </div>
+            <div class="stat">
+              <h1 class="stat__title" id="users"></h1>
+              <p class="stat__about">Total Users</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <script src="/public/js/index.js" defer></script>
+    </div>
+  </body>
+</html>

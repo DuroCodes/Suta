@@ -1,0 +1,142 @@
+.nav {
+  width: 20vw;
+  position: fixed;
+  height: 55vh;
+  background: var(--black);
+  opacity: 0.9;
+  right: 100%;
+  top: 15%;
+  z-index: 998;
+  border-radius: 25px;
+  transition: 0.75s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+.nav__active {
+  position: fixed;
+  right: 79%;
+}
+.nav__inside {
+  display: flex;
+  flex-direction: column;
+  margin-left: 1.75rem;
+}
+a {
+  color: var(--off-white);
+}
+li {
+  list-style-type: none;
+}
+.nav__burger {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  right: 95%;
+  top: 5%;
+  z-index: 999;
+  cursor: pointer;
+}
+
+.burger__line {
+  width: 28px;
+  height: 2px;
+  background-color: var(--main);
+  transition: 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+.burger__line:last-child {
+  margin-top: 3px;
+}
+.burger__line:first-child {
+  margin-bottom: 3px;
+}
+
+.burger__line__top {
+  transform: rotate(45deg);
+}
+.burger__line__bottom {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+.nav__header {
+  margin: 25px 25px 25px 0px;
+  margin-bottom: 4rem;
+}
+.nav__title {
+  color: var(--off-white);
+  font-family: var(--header-font);
+  font-weight: 600;
+}
+.nav__about {
+  color: var(--off-white);
+  font-family: var(--header-font);
+  font-weight: 300;
+  opacity: 0.5;
+}
+
+.nav__item {
+  margin-bottom: 15px;
+  font-family: var(--header-font);
+}
+.nav__item a {
+  letter-spacing: 0;
+  font-size: 28px;
+  font-weight: 600;
+  opacity: 0.5;
+  transition: 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+.nav__item a:hover {
+  letter-spacing: 0.25rem;
+  opacity: 1;
+}
+
+.nav__buttons {
+  margin-top: 1rem;
+  display: flex;
+}
+.nav__buttons a {
+  display: flex;
+  justify-content: center;
+  background-color: var(--gray);
+  height: 45px;
+  width: 45px;
+  font-size: 27px;
+  border-radius: 100%;
+  margin-right: 15px;
+  transition: 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+.nav__buttons i {
+  margin-top: 9px;
+}
+.nav__buttons a:hover {
+  background-color: var(--gray2);
+}
+@media screen and (max-width: 1252px) {
+  .nav__burger {
+    position: fixed;
+    right: 90%;
+    top: 5%;
+  }
+  .nav {
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    border-radius: 0;
+  }
+  .nav__active {
+    right: 0;
+    top: 0;
+  }
+  .nav__header {
+    margin-top: 7rem;
+  }
+  .nav__inside {
+    margin-left: 4.75rem;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .nav__burger {
+    position: fixed;
+    right: 80%;
+    top: 5%;
+  }
+}

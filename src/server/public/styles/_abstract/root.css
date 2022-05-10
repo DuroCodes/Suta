@@ -1,0 +1,45 @@
+@import url("https://use.typekit.net/pom8zfo.css");
+
+:root {
+  --main: rgb(255, 33, 69);
+  --main: #5E81AC;
+  --black: #2E3440;
+  --black2: #272b35;
+  --gray3: rgb(100, 100, 101);
+  --blue: #81A1C1;
+  --off-white: #E5E9F0;
+  --off-white2: #ECEFF4;
+  --header-font: "Degular", sans-serif;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+}
+
+.underline {
+  border-bottom: 2px dashed var(--main);
+}
+
+.divider {
+  width: 99%;
+  margin-left: auto;
+  margin-right: auto;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    #81A1C125 0%,
+    #5E81AC70 50.38%,
+    #81A1C125 100%
+  );
+  margin-bottom: 4rem;
+}
+
+.capatalized {
+  text-transform: capitalize !important;
+}

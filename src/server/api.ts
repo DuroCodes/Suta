@@ -28,11 +28,11 @@ export default async () => {
     } as Data;
   });
 
-  app.get('/transcripts', async (req, rep) => {
+  app.get('/transcripts/:guildId/:channelId', async (req, rep) => {
     rep.header('Access-Control-Allow-Origin', '*');
     const data = await guildSchema.find();
-    const { guildId, channelId } = req.query as TranscriptData;
-    if (!guildId || !channelId) return rep.code(400).send('Missing query params. guildId and channelId are required.');
+    const { guildId, channelId } = req.params as TranscriptData;
+    if (!guildId || !channelId) return rep.code(400).send('Missing query params. guildId and channelId are required. Example: /transcripts/<guildId>/<channelId>');
 
     const guildData = data.find(({ guildId: id }) => id === guildId);
     if (!guildData) return rep.code(404);

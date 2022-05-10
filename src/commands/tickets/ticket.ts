@@ -365,7 +365,7 @@ export class UserCommand extends Command {
 
     async function close() {
       const { tickets } = guildData as any;
-      const ticket = tickets.find((t: Ticket) => t.channelId === interaction.channelId);
+      const ticket: Ticket = tickets.find((t: Ticket) => t.channelId === interaction.channelId);
       if (!ticket) {
         return interaction.reply({
           embeds: [
@@ -380,6 +380,20 @@ export class UserCommand extends Command {
       (guildData?.tickets as any).pull(ticket);
       await guildData?.save();
 
+      if (guildData?.transcriptsEnabled) {
+        const ticketOwner = interaction.guild?.members.cache.get(ticket.creatorId as string);
+        ticketOwner?.send({
+          embeds: [
+            new MessageEmbed()
+              .setTitle(`${emoji.ticket} Ticket Closed`)
+              .setColor(colors.invisible as ColorResolvable)
+              .setDescription(`
+${interaction.user} closed the ticket \`#${(interaction.channel as TextChannel).name}\`.
+To view the transcript, click [here](http://api.suta.tk/transcripts/${(interaction.channel as TextChannel).id}).`),
+          ],
+        });
+      }
+
       if (guildData?.loggingEnabled && guildData.loggingChannel) {
         const guild = interaction.guild as Guild;
         const loggingChannel = guild.channels.cache.get(guildData.loggingChannel);
@@ -387,7 +401,7 @@ export class UserCommand extends Command {
           const embed = new MessageEmbed()
             .setTitle(`${emoji.ticket} Ticket Closed`)
             .setColor(colors.invisible as ColorResolvable)
-            .setDescription(`${interaction.user} closed the ticket \`#${(interaction.channel as TextChannel).name}\`.`)
+            .setDescription(`${interaction.user} closed the ticket \`#${(interaction.channel as TextChannel).name}\`. ${guildData.loggingEnabled ? `[Transcript](http://api.suta.tk/transcripts/${(interaction.channel as TextChannel).id})` : ''}`)
             .setTimestamp();
 
           await loggingChannel.send({ embeds: [embed] });
@@ -395,7 +409,18 @@ export class UserCommand extends Command {
       }
 
       const channel = interaction.channel as TextChannel;
-      channel.delete('Suta 💫 | Ticket Closed');
+      channel.delete('Suta 💫 | Ticket Closed').catch(() => {
+        channel.send({
+          embeds: [
+            new MessageEmbed()
+              .setTitle(`${emoji.ticket} Ticket Failed to Close`)
+              .setColor(colors.invisible as ColorResolvable)
+              .setDescription(`\
+The ticket failed to close. Please insure I have permissions.
+Join our support server for more information. (\`/support\`)`),
+          ],
+        });
+      });
     }
 
     switch (interaction.options.getSubcommand(true)) {

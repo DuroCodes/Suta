@@ -100,7 +100,7 @@ ${user} closed the ticket \`#${(channel as TextChannel).name}\`.
 To view the transcript, click [here](http://api.suta.tk/transcripts/${(channel as TextChannel).id}).`)
                 .setTimestamp(),
             ],
-          }).catch(() => {});
+          });
         }
 
         await guildData.save();

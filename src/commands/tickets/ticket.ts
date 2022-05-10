@@ -12,6 +12,7 @@ import type { ApplicationCommandRegistry, CommandOptions } from '@sapphire/frame
 import { ApplicationCommandOptionTypes } from 'discord.js/typings/enums';
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@sapphire/framework';
+import { createTranscript } from 'discord-html-transcripts';
 import GuildSchema from '../../schemas/guild';
 import colors from '../../util/colors.json';
 import emoji from '../../util/emoji.json';
@@ -125,7 +126,7 @@ export class UserCommand extends Command {
       ticketChannel.send({
         embeds: [embed],
         components: [dropdown],
-      });
+      }).catch(() => { });
     }
 
     async function add(user: User) {
@@ -347,7 +348,7 @@ export class UserCommand extends Command {
             .setDescription(`${interaction.user} renamed \`#${channel.name}\` to \`#${name}\`.`)
             .setTimestamp();
 
-          await loggingChannel.send({ embeds: [embed] });
+          await loggingChannel.send({ embeds: [embed] }).catch(() => { });
         }
       }
 
@@ -365,37 +366,66 @@ export class UserCommand extends Command {
 
     async function close() {
       const { tickets } = guildData as any;
-      const ticket = tickets.find((t: Ticket) => t.channelId === interaction.channelId);
-      if (!ticket) {
-        return interaction.reply({
-          embeds: [
-            new MessageEmbed()
-              .setTitle(`${emoji.wrong} This is not a ticket channel.`)
-              .setColor(colors.invisible as ColorResolvable),
-          ],
-          ephemeral: true,
+      interaction.channel?.delete('Suta | Closed Ticket')
+        .then(async () => {
+          const channel = interaction.channel as TextChannel;
+          const ticket = tickets.find((t: Ticket) => t.channelId === channel.id);
+          (tickets as any).pull(ticket);
+
+          if (guildData?.loggingEnabled && guildData.loggingChannel) {
+            const guild = interaction.guild as Guild;
+            const loggingChannel = guild.channels.cache.get(guildData.loggingChannel);
+            if (loggingChannel instanceof TextChannel) {
+              await loggingChannel.send({
+                embeds: [
+                  new MessageEmbed()
+                    .setTitle(`${emoji.ticket} Ticket Closed`)
+                    .setColor(colors.invisible as ColorResolvable)
+                    .setDescription(`${interaction.user} closed the ticket \`#${(channel as TextChannel).name}\`.${guildData.transcriptsEnabled ? `\n[Transcript](http://api.suta.tk/transcripts/${(channel as TextChannel).id})` : ''}`)
+                    .setTimestamp(),
+                ],
+              }).catch(() => { });
+            }
+          }
+
+          await guildData?.save();
+
+          if (guildData?.transcriptsEnabled) {
+            const transcript = await createTranscript(channel as TextChannel, {
+              returnType: 'string',
+              minify: true,
+            });
+
+            guildData?.transcripts?.push({
+              name: (channel as TextChannel).id, data: transcript as string,
+            });
+
+            interaction.user.send({
+              embeds: [
+                new MessageEmbed()
+                  .setTitle(`${emoji.ticket} Ticket Closed`)
+                  .setColor(colors.invisible as ColorResolvable)
+                  .setDescription(`\
+  ${interaction.user} closed the ticket \`#${(channel as TextChannel).name}\`.
+  To view the transcript, click [here](http://api.suta.tk/transcripts/${(channel as TextChannel).id}).`)
+                  .setTimestamp(),
+              ],
+            }).catch(() => { });
+          }
+        })
+        .catch(() => {
+          interaction.reply({
+            embeds: [
+              new MessageEmbed()
+                .setTitle(`${emoji.wrong} Failed to close ticket.`)
+                .setColor(colors.invisible as ColorResolvable)
+                .setDescription(`\
+Please make sure I have permission to delete channels in this server.
+Please join our support server for more information. \`/support\``),
+            ],
+            ephemeral: true,
+          });
         });
-      }
-
-      (guildData?.tickets as any).pull(ticket);
-      await guildData?.save();
-
-      if (guildData?.loggingEnabled && guildData.loggingChannel) {
-        const guild = interaction.guild as Guild;
-        const loggingChannel = guild.channels.cache.get(guildData.loggingChannel);
-        if (loggingChannel instanceof TextChannel) {
-          const embed = new MessageEmbed()
-            .setTitle(`${emoji.ticket} Ticket Closed`)
-            .setColor(colors.invisible as ColorResolvable)
-            .setDescription(`${interaction.user} closed the ticket \`#${(interaction.channel as TextChannel).name}\`.`)
-            .setTimestamp();
-
-          await loggingChannel.send({ embeds: [embed] });
-        }
-      }
-
-      const channel = interaction.channel as TextChannel;
-      channel.delete('Suta 💫 | Ticket Closed');
     }
 
     switch (interaction.options.getSubcommand(true)) {

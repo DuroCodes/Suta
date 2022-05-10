@@ -457,6 +457,7 @@ Join our support server for more information. (\`/support\`)`),
             guildData?.transcripts?.push({
               name: (channel as TextChannel).id, data: transcript as string,
             });
+            await guildData.save();
 
             interaction.user.send({
               embeds: [

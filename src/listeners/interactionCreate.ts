@@ -79,6 +79,7 @@ Please join our support server for more information. \`/support\``),
           });
 
         (tickets as any).pull(ticket);
+        await guildData.save();
 
         if (guildData?.loggingEnabled && guildData.loggingChannel) {
           const guild = interaction.guild as Guild;
@@ -105,6 +106,7 @@ Please join our support server for more information. \`/support\``),
           guildData?.transcripts?.push({
             name: (channel as TextChannel).id, data: transcript as string,
           });
+          await guildData.save();
 
           interaction.user.send({
             embeds: [
@@ -117,7 +119,6 @@ Please join our support server for more information. \`/support\``),
                 .setTimestamp(),
             ],
           }).catch(() => { });
-          await guildData.save();
         }
       }
     }

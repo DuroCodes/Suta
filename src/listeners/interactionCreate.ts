@@ -63,24 +63,6 @@ export class UserListener extends Listener {
           });
         }
 
-        channel?.delete('Suta | Closed Ticket')
-          .catch(() => {
-            interaction.reply({
-              embeds: [
-                new MessageEmbed()
-                  .setTitle(`${emoji.wrong} Failed to close ticket.`)
-                  .setColor(colors.invisible as ColorResolvable)
-                  .setDescription(`\
-Please make sure I have permission to delete channels in this server.
-Please join our support server for more information. \`/support\``),
-              ],
-              ephemeral: true,
-            });
-          });
-
-        (tickets as any).pull(ticket);
-        await guildData.save();
-
         if (guildData?.loggingEnabled && guildData.loggingChannel) {
           const guild = interaction.guild as Guild;
           const loggingChannel = guild.channels.cache.get(guildData.loggingChannel);
@@ -96,7 +78,6 @@ Please join our support server for more information. \`/support\``),
             });
           }
         }
-
         if (guildData?.transcriptsEnabled) {
           const transcript = await createTranscript(channel as TextChannel, {
             returnType: 'string',
@@ -121,6 +102,24 @@ Please join our support server for more information. \`/support\``),
             ],
           }).catch(() => { });
         }
+
+        channel?.delete('Suta | Closed Ticket')
+          .catch(() => {
+            interaction.reply({
+              embeds: [
+                new MessageEmbed()
+                  .setTitle(`${emoji.wrong} Failed to close ticket.`)
+                  .setColor(colors.invisible as ColorResolvable)
+                  .setDescription(`\
+Please make sure I have permission to delete channels in this server.
+Please join our support server for more information. \`/support\``),
+              ],
+              ephemeral: true,
+            });
+          });
+
+        (tickets as any).pull(ticket);
+        await guildData.save();
       }
     }
 

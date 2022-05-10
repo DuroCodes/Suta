@@ -411,81 +411,64 @@ To view the transcript, click [here](http://api.suta.tk/transcripts/${(interacti
       }
 
       const channel = interaction.channel as TextChannel;
-      channel.delete('Suta 💫 | Ticket Closed').catch(() => {
-        channel.send({
-          embeds: [
-            new MessageEmbed()
-              .setTitle(`${emoji.ticket} Ticket Failed to Close`)
-              .setColor(colors.invisible as ColorResolvable)
-              .setDescription(`\
-The ticket failed to close. Please insure I have permissions.
-Join our support server for more information. (\`/support\`)`),
-          ],
-        });
-      });
 
-      interaction.channel?.delete('Suta | Closed Ticket')
-        .then(async () => {
-          const channel = interaction.channel as TextChannel;
-          const ticket = tickets.find((t: Ticket) => t.channelId === channel.id);
-          (tickets as any).pull(ticket);
+      (tickets as any).pull(ticket);
 
-          if (guildData?.loggingEnabled && guildData.loggingChannel) {
-            const guild = interaction.guild as Guild;
-            const loggingChannel = guild.channels.cache.get(guildData.loggingChannel);
-            if (loggingChannel instanceof TextChannel) {
-              await loggingChannel.send({
-                embeds: [
-                  new MessageEmbed()
-                    .setTitle(`${emoji.ticket} Ticket Closed`)
-                    .setColor(colors.invisible as ColorResolvable)
-                    .setDescription(`${interaction.user} closed the ticket \`#${(channel as TextChannel).name}\`.${guildData.transcriptsEnabled ? `\n[Transcript](http://api.suta.tk/transcripts/${(channel as TextChannel).id})` : ''}`)
-                    .setTimestamp(),
-                ],
-              }).catch(() => { });
-            }
-          }
-
-          await guildData?.save();
-
-          if (guildData?.transcriptsEnabled) {
-            const transcript = await createTranscript(channel as TextChannel, {
-              returnType: 'string',
-              minify: true,
-            });
-
-            guildData?.transcripts?.push({
-              name: (channel as TextChannel).id, data: transcript as string,
-            });
-
-            await guildData.save();
-
-            interaction.user.send({
-              embeds: [
-                new MessageEmbed()
-                  .setTitle(`${emoji.ticket} Ticket Closed`)
-                  .setColor(colors.invisible as ColorResolvable)
-                  .setDescription(`\
-  ${interaction.user} closed the ticket \`#${(channel as TextChannel).name}\`.
-  To view the transcript, click [here](http://api.suta.tk/transcripts/${(channel as TextChannel).id}).`)
-                  .setTimestamp(),
-              ],
-            }).catch(() => { });
-          }
-        })
-        .catch(() => {
-          interaction.reply({
+      if (guildData?.loggingEnabled && guildData.loggingChannel) {
+        const guild = interaction.guild as Guild;
+        const loggingChannel = guild.channels.cache.get(guildData.loggingChannel);
+        if (loggingChannel instanceof TextChannel) {
+          await loggingChannel.send({
             embeds: [
               new MessageEmbed()
-                .setTitle(`${emoji.wrong} Failed to close ticket.`)
+                .setTitle(`${emoji.ticket} Ticket Closed`)
+                .setColor(colors.invisible as ColorResolvable)
+                .setDescription(`${interaction.user} closed the ticket \`#${(channel as TextChannel).name}\`.${guildData.transcriptsEnabled ? `\n[Transcript](http://api.suta.tk/transcripts/${(channel as TextChannel).id})` : ''}`)
+                .setTimestamp(),
+            ],
+          }).catch(() => { });
+        }
+
+        if (guildData?.transcriptsEnabled) {
+          const transcript = await createTranscript(channel as TextChannel, {
+            returnType: 'string',
+            minify: true,
+          });
+
+          guildData?.transcripts?.push({
+            name: (channel as TextChannel).id, data: transcript as string,
+          });
+
+          await guildData.save();
+
+          interaction.user.send({
+            embeds: [
+              new MessageEmbed()
+                .setTitle(`${emoji.ticket} Ticket Closed`)
                 .setColor(colors.invisible as ColorResolvable)
                 .setDescription(`\
-Please make sure I have permission to delete channels in this server.
-Please join our support server for more information. \`/support\``),
+  ${interaction.user} closed the ticket \`#${(channel as TextChannel).name}\`.
+  To view the transcript, click [here](http://api.suta.tk/transcripts/${(channel as TextChannel).id}).`)
+                .setTimestamp(),
             ],
-            ephemeral: true,
+          }).catch(() => { });
+
+          channel.delete('Suta 💫 | Ticket Closed').catch(() => {
+            channel.send({
+              embeds: [
+                new MessageEmbed()
+                  .setTitle(`${emoji.ticket} Ticket Failed to Close`)
+                  .setColor(colors.invisible as ColorResolvable)
+                  .setDescription(`\
+The ticket failed to close. Please insure I have permissions.
+Join our support server for more information. (\`/support\`)`),
+              ],
+            });
           });
-        });
+
+          await guildData?.save();
+        }
+      }
     }
 
     switch (interaction.options.getSubcommand(true)) {

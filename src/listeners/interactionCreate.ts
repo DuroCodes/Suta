@@ -92,6 +92,18 @@ export class UserListener extends Listener {
 
         await guildData.save();
 
+        interaction.user.send({
+          embeds: [
+            new MessageEmbed()
+              .setTitle(`${emoji.ticket} Ticket Closed`)
+              .setColor(colors.invisible as ColorResolvable)
+              .setDescription(`
+${user} closed the ticket \`#${(channel as TextChannel).name}\`.
+To view the transcript, click [here](http://api.suta.tk/transcripts?guildId=${guildId}&channelId=${(channel as TextChannel).id}).`)
+              .setTimestamp(),
+          ],
+        });
+
         channel?.delete('Suta | Closed Ticket');
       }
     }

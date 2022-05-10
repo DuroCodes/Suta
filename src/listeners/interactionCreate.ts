@@ -81,28 +81,29 @@ export class UserListener extends Listener {
           }
         }
 
-        const transcript = await createTranscript(channel as TextChannel, {
-          returnType: 'string',
-          minify: true,
-        });
+        if (guildData.transcriptsEnabled) {
+          const transcript = await createTranscript(channel as TextChannel, {
+            returnType: 'string',
+            minify: true,
+          });
 
-        guildData?.transcripts?.push({
-          name: (channel as TextChannel).id, data: transcript as string,
-        });
-
-        await guildData.save();
-
-        interaction.user.send({
-          embeds: [
-            new MessageEmbed()
-              .setTitle(`${emoji.ticket} Ticket Closed`)
-              .setColor(colors.invisible as ColorResolvable)
-              .setDescription(`
+          guildData?.transcripts?.push({
+            name: (channel as TextChannel).id, data: transcript as string,
+          });
+          interaction.user.send({
+            embeds: [
+              new MessageEmbed()
+                .setTitle(`${emoji.ticket} Ticket Closed`)
+                .setColor(colors.invisible as ColorResolvable)
+                .setDescription(`
 ${user} closed the ticket \`#${(channel as TextChannel).name}\`.
 To view the transcript, click [here](http://api.suta.tk/transcripts?guildId=${guildId}&channelId=${(channel as TextChannel).id}).`)
-              .setTimestamp(),
-          ],
-        });
+                .setTimestamp(),
+            ],
+          }).catch(() => {});
+        }
+
+        await guildData.save();
 
         channel?.delete('Suta | Closed Ticket');
       }

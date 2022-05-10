@@ -3,7 +3,7 @@ import { Transcript } from './transcript';
 import { TicketMenu } from './menu';
 import { Ticket } from './ticket';
 
-interface GuildSchema {
+export interface GuildSchema {
   guildId?: string;
   adminRole?: string;
   supportRole?: string;

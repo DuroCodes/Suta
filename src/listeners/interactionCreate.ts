@@ -74,7 +74,7 @@ export class UserListener extends Listener {
                 new MessageEmbed()
                   .setTitle(`${emoji.ticket} Ticket Closed`)
                   .setColor(colors.invisible as ColorResolvable)
-                  .setDescription(`${user} closed the ticket \`#${(channel as TextChannel).name}\`.`)
+                  .setDescription(`${user} closed the ticket \`#${(channel as TextChannel).name}\`.${guildData.transcriptsEnabled ? `\n[Transcript](http://api.suta.tk/transcripts?guildId=${guildId}&channelId=${(channel as TextChannel).id})` : ''}`)
                   .setTimestamp(),
               ],
             });

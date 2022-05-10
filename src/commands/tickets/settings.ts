@@ -10,6 +10,7 @@ import emoji from '../../util/emoji.json';
 
 const enum Subcommand {
   SupportRole = 'support-role',
+  Transcripts = 'transcripts',
   MaxTickets = 'max-tickets',
   AdminRole = 'admin-role',
   Category = 'category',
@@ -171,6 +172,22 @@ The logging channel has been updated.
         await guildData.save();
         break;
       }
+      case Subcommand.Transcripts: {
+        const transcriptsEnabled = interaction.options.get('enabled')?.value as boolean;
+        interaction.reply({
+          embeds: [
+            new MessageEmbed()
+              .setTitle(`${emoji.settings} Transcripts`)
+              .setColor(colors.invisible as ColorResolvable)
+              .setDescription(`\
+The transcripts have been updated.
+**Enabled:** \`${transcriptsEnabled}\``),
+          ],
+        });
+        guildData.transcriptsEnabled = transcriptsEnabled;
+        await guildData.save();
+        break;
+      }
       default:
         break;
     }
@@ -183,7 +200,7 @@ The logging channel has been updated.
       options: [
         {
           type: ApplicationCommandOptionTypes.SUB_COMMAND,
-          name: 'transcripts',
+          name: Subcommand.Transcripts,
           description: 'Set options for transcripts.',
           options: [
             {

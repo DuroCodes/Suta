@@ -1,5 +1,5 @@
 (async () => {
-  fetch('http://suta.tk/api/').then((response) => response.json())
+  fetch('http://suta.tk/api').then((response) => response.json())
     .then((data) => {
       const { servers, users } = data;
 

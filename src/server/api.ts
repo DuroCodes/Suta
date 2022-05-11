@@ -22,7 +22,7 @@ export default async () => {
 
   app.get('/', async (_req, rep) => rep.sendFile('index.html'));
 
-  app.get('/api/', async (_req, rep) => {
+  app.get('/api', async (_req, rep) => {
     rep.header('Access-Control-Allow-Origin', '*');
     rep.type('application/json').code(200);
     return {

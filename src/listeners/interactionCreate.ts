@@ -72,7 +72,7 @@ export class UserListener extends Listener {
                 new MessageEmbed()
                   .setTitle(`${emoji.ticket} Ticket Closed`)
                   .setColor(colors.invisible as ColorResolvable)
-                  .setDescription(`${user} closed the ticket \`#${(channel as TextChannel).name}\`.${guildData.transcriptsEnabled ? `\n[Transcript](http://api.suta.tk/transcripts/${(channel as TextChannel).id})` : ''}`)
+                  .setDescription(`${user} closed the ticket \`#${(channel as TextChannel).name}\`.${guildData.transcriptsEnabled ? `\n[Transcript](http://suta.tk/transcripts/${(channel as TextChannel).id})` : ''}`)
                   .setTimestamp(),
               ],
             });
@@ -97,7 +97,7 @@ export class UserListener extends Listener {
                 .setColor(colors.invisible as ColorResolvable)
                 .setDescription(`\
   ${user} closed the ticket \`#${(channel as TextChannel).name}\`.
-  To view the transcript, click [here](http://api.suta.tk/transcripts/${(channel as TextChannel).id}).`)
+  To view the transcript, click [here](http://suta.tk/transcripts/${(channel as TextChannel).id}).`)
                 .setTimestamp(),
             ],
           }).catch(() => { });

@@ -8,7 +8,6 @@ import guildSchema from '../schemas/guild';
 import { GuildSchema } from '../typings/guild';
 
 interface TranscriptData {
-  guildId: string;
   channelId: string;
 }
 

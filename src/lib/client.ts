@@ -17,7 +17,7 @@ export class UserClient extends SapphireClient {
       ],
       loadDefaultErrorListeners: true,
       logger: {
-        level: LogLevel.Debug,
+        level: LogLevel.Info,
         format: {
           debug: {
             timestamp: null,

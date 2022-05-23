@@ -71,7 +71,7 @@ export class UserCommand extends Command {
             new MessageEmbed()
               .setTitle(`${emoji.wrong} Ticket Menu Invalid.`)
               .setColor(colors.invisible as ColorResolvable)
-              .setDescription('The ticket menu is not setup. Use `/settings menu` to set it up.'),
+              .setDescription('The ticket menu does not have a channel. Use `/settings menu` to set one up.'),
           ],
         });
       }
@@ -93,7 +93,7 @@ export class UserCommand extends Command {
             new MessageEmbed()
               .setTitle(`${emoji.wrong} Ticket Menu Invalid.`)
               .setColor(colors.invisible as ColorResolvable)
-              .setDescription('The channel in the setup does not exist. Use `/settings menu` to set it up.'),
+              .setDescription('The channel in the menu does not exist. Use `/settings menu` to set it up.'),
           ],
         });
       }

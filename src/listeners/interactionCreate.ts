@@ -132,7 +132,13 @@ Please join our support server for more information. \`/support\``),
       if (!ticketTopics?.includes(interaction.values[0] as string)) return;
 
       const {
-        ticketCategories, tickets, maxTickets, supportRole, adminRole, ticketCategory,
+        ticketCategories,
+        tickets,
+        maxTickets,
+        supportRole,
+        adminRole,
+        ticketCategory,
+        loggingEnabled,
       } = guildData;
       const { loggingChannel } = guildData;
 
@@ -140,20 +146,61 @@ Please join our support server for more information. \`/support\``),
       const menuMessage = await menuChannel?.messages.fetch(interaction.message.id);
       menuMessage.edit({ components: menuMessage.components });
 
-      if (
-        !ticketCategory
-        || !ticketCategories
-        || !maxTickets
-        || !supportRole
-        || !adminRole
-        || !loggingChannel
-      ) {
+      if (loggingEnabled && !loggingChannel) {
         return interaction.reply({
           embeds: [
             new MessageEmbed()
               .setTitle(`${emoji.wrong} Ticket System Error.`)
               .setColor(colors.invisible as ColorResolvable)
-              .setDescription('The ticket system is not setup. Use `/settings` to set it up.'),
+              .setDescription('The logging channel has not been setup. Use `/settings` to set it up.'),
+          ],
+          ephemeral: true,
+        });
+      }
+
+      if (!maxTickets) {
+        return interaction.reply({
+          embeds: [
+            new MessageEmbed()
+              .setTitle(`${emoji.wrong} Ticket System Error.`)
+              .setColor(colors.invisible as ColorResolvable)
+              .setDescription('The `max-tickets` option has not been setup. Use `/settings` to set it up.'),
+          ],
+          ephemeral: true,
+        });
+      }
+
+      if (!supportRole || !adminRole) {
+        return interaction.reply({
+          embeds: [
+            new MessageEmbed()
+              .setTitle(`${emoji.wrong} Ticket System Error.`)
+              .setColor(colors.invisible as ColorResolvable)
+              .setDescription('The `support-role` or `admin-role` option has not been setup. Use `/settings` to set it up.'),
+          ],
+          ephemeral: true,
+        });
+      }
+
+      if (!ticketCategory) {
+        return interaction.reply({
+          embeds: [
+            new MessageEmbed()
+              .setTitle(`${emoji.wrong} Ticket System Error.`)
+              .setColor(colors.invisible as ColorResolvable)
+              .setDescription('You have not set up a category for tickets. Use `/settings` to set it up.'),
+          ],
+          ephemeral: true,
+        });
+      }
+
+      if (!ticketCategories || ticketCategories.length < 1) {
+        return interaction.reply({
+          embeds: [
+            new MessageEmbed()
+              .setTitle(`${emoji.wrong} Ticket System Error.`)
+              .setColor(colors.invisible as ColorResolvable)
+              .setDescription('You have not set up any categories for tickets. Use `/category` to create one.'),
           ],
           ephemeral: true,
         });
@@ -187,6 +234,21 @@ Please join our support server for more information. \`/support\``),
       }
 
       const ticketCat = guild?.channels.cache.get(ticketCategory) as CategoryChannel;
+
+      if (interaction.guild?.me?.permissions.has('MANAGE_CHANNELS')) {
+        return interaction.reply({
+          embeds: [
+            new MessageEmbed()
+              .setTitle(`${emoji.wrong} Permission Error`)
+              .setColor(colors.invisible as ColorResolvable)
+              .setDescription(`\
+I do not have the \`MANAGE_CHANNELS\` permission.
+Please insure I have the correct permissions.
+If this error continues, please join our support server. (\`/support\`)`),
+          ],
+          ephemeral: true,
+        });
+      }
 
       await ticketCat.createChannel(`ticket-${user.username}`, {
         type: 'GUILD_TEXT',
@@ -271,17 +333,7 @@ Please join our support server for more information. \`/support\``),
                     .setEmoji('🔒'),
                 ),
             ],
-          }).catch(() => interaction.reply({
-            embeds: [
-              new MessageEmbed()
-                .setTitle(`${emoji.wrong} Ticket System Error.`)
-                .setColor(colors.invisible as ColorResolvable)
-                .setDescription(`\
-Please make sure I have permission to create channels in the ticket category.
-Please join our support server for more information. \`/support\``),
-            ],
-            ephemeral: true,
-          }));
+          });
         }
 
         if (guildData?.loggingEnabled && guildData.loggingChannel) {

@@ -235,123 +235,122 @@ Please join our support server for more information. \`/support\``),
 
       const ticketCat = guild?.channels.cache.get(ticketCategory) as CategoryChannel;
 
-      if (interaction.guild?.me?.permissions.has('MANAGE_CHANNELS')) {
-        return interaction.reply({
+      try {
+        await ticketCat.createChannel(`ticket-${user.username}`, {
+          type: 'GUILD_TEXT',
+          topic: `${user.username}'s Ticket. To close, use /ticket close`,
+          reason: 'Suta | Ticket Creation',
+          permissionOverwrites: [
+            {
+              id: guild?.roles.everyone.id as string,
+              deny: ['VIEW_CHANNEL'],
+            },
+            {
+              id: user.id,
+              allow: ['VIEW_CHANNEL', 'SEND_MESSAGES'],
+            },
+            {
+              id: supportRole,
+              allow: ['VIEW_CHANNEL', 'SEND_MESSAGES'],
+            },
+            {
+              id: adminRole,
+              allow: ['VIEW_CHANNEL', 'SEND_MESSAGES'],
+            },
+          ],
+        }).then(async (newChannel: TextChannel) => {
+          interaction.reply({
+            embeds: [
+              new MessageEmbed()
+                .setTitle(`${emoji.ticket} Ticket Created.`)
+                .setColor(colors.invisible as ColorResolvable)
+                .setDescription(`Your ticket has been created, ${newChannel}.`),
+            ],
+            ephemeral: true,
+          });
+
+          tickets.push({
+            creatorId: user.id,
+            channelId: newChannel.id,
+            guildId: interaction.guildId as string,
+            createdAt: new Date().toISOString(),
+            claimed: false,
+            addedUsers: [],
+          });
+          await guildData?.save();
+
+          if (category.ticketText) {
+            newChannel.send({
+              content: category.ticketText.replace('{user}', `<@${user.id}>`),
+              embeds: [
+                new MessageEmbed()
+                  .setTitle(`${category.emoji} ${interaction.values[0]?.substring(7)} | Ticket`)
+                  .setColor(colors.invisible as ColorResolvable)
+                  .setDescription(`${(category.embedDesc || category.description || 'Hello {user}! Please explain your issue further').replace('{user}', `<@${user.id}>`).replace(/\\n/g, '\n')}`)
+                  .setTimestamp(),
+              ],
+              components: [
+                new MessageActionRow()
+                  .addComponents(
+                    new MessageButton()
+                      .setCustomId('ticket-close')
+                      .setLabel('Close Ticket')
+                      .setStyle('DANGER')
+                      .setEmoji('🔒'),
+                  ),
+              ],
+            });
+          } else {
+            newChannel.send({
+              embeds: [
+                new MessageEmbed()
+                  .setTitle(`${category.emoji} ${interaction.values[0]?.substring(7)} | Ticket`)
+                  .setColor(colors.invisible as ColorResolvable)
+                  .setDescription(`${(category.embedDesc || category.description || 'Hello {user}! Please explain your issue further').replace('{user}', `<@${user.id}>`).replace(/\\n/g, '\n')}`)
+                  .setTimestamp(),
+              ],
+              components: [
+                new MessageActionRow()
+                  .addComponents(
+                    new MessageButton()
+                      .setCustomId('ticket-close')
+                      .setLabel('Close Ticket')
+                      .setStyle('DANGER')
+                      .setEmoji('🔒'),
+                  ),
+              ],
+            });
+          }
+
+          if (guildData?.loggingEnabled && guildData.loggingChannel) {
+            const guild = interaction.guild as Guild;
+            const loggingChannel = guild.channels.cache.get(guildData.loggingChannel);
+            if (loggingChannel instanceof TextChannel) {
+              await loggingChannel.send({
+                embeds: [
+                  new MessageEmbed()
+                    .setTitle(`${emoji.ticket} Ticket Opened`)
+                    .setColor(colors.invisible as ColorResolvable)
+                    .setDescription(`${user} opened a ticket \`#${newChannel.name}\`.`)
+                    .setTimestamp(),
+                ],
+              });
+            }
+          }
+        });
+      } catch {
+        interaction.reply({
           embeds: [
             new MessageEmbed()
               .setTitle(`${emoji.wrong} Permission Error`)
               .setColor(colors.invisible as ColorResolvable)
               .setDescription(`\
-I do not have the \`MANAGE_CHANNELS\` permission.
-Please insure I have the correct permissions.
+I do not have the correct permissions. Re-invite me from https://suta.tk.
 If this error continues, please join our support server. (\`/support\`)`),
           ],
           ephemeral: true,
         });
       }
-
-      await ticketCat.createChannel(`ticket-${user.username}`, {
-        type: 'GUILD_TEXT',
-        topic: `${user.username}'s Ticket. To close, use /ticket close`,
-        reason: 'Suta | Ticket Creation',
-        permissionOverwrites: [
-          {
-            id: guild?.roles.everyone.id as string,
-            deny: ['VIEW_CHANNEL'],
-          },
-          {
-            id: user.id,
-            allow: ['VIEW_CHANNEL', 'SEND_MESSAGES'],
-          },
-          {
-            id: supportRole,
-            allow: ['VIEW_CHANNEL', 'SEND_MESSAGES'],
-          },
-          {
-            id: adminRole,
-            allow: ['VIEW_CHANNEL', 'SEND_MESSAGES'],
-          },
-        ],
-      }).then(async (newChannel: TextChannel) => {
-        interaction.reply({
-          embeds: [
-            new MessageEmbed()
-              .setTitle(`${emoji.ticket} Ticket Created.`)
-              .setColor(colors.invisible as ColorResolvable)
-              .setDescription(`Your ticket has been created, ${newChannel}.`),
-          ],
-          ephemeral: true,
-        });
-
-        tickets.push({
-          creatorId: user.id,
-          channelId: newChannel.id,
-          guildId: interaction.guildId as string,
-          createdAt: new Date().toISOString(),
-          claimed: false,
-          addedUsers: [],
-        });
-        await guildData?.save();
-
-        if (category.ticketText) {
-          newChannel.send({
-            content: category.ticketText.replace('{user}', `<@${user.id}>`),
-            embeds: [
-              new MessageEmbed()
-                .setTitle(`${category.emoji} ${interaction.values[0]?.substring(7)} | Ticket`)
-                .setColor(colors.invisible as ColorResolvable)
-                .setDescription(`${(category.embedDesc || category.description || 'Hello {user}! Please explain your issue further').replace('{user}', `<@${user.id}>`).replace(/\\n/g, '\n')}`)
-                .setTimestamp(),
-            ],
-            components: [
-              new MessageActionRow()
-                .addComponents(
-                  new MessageButton()
-                    .setCustomId('ticket-close')
-                    .setLabel('Close Ticket')
-                    .setStyle('DANGER')
-                    .setEmoji('🔒'),
-                ),
-            ],
-          });
-        } else {
-          newChannel.send({
-            embeds: [
-              new MessageEmbed()
-                .setTitle(`${category.emoji} ${interaction.values[0]?.substring(7)} | Ticket`)
-                .setColor(colors.invisible as ColorResolvable)
-                .setDescription(`${(category.embedDesc || category.description || 'Hello {user}! Please explain your issue further').replace('{user}', `<@${user.id}>`).replace(/\\n/g, '\n')}`)
-                .setTimestamp(),
-            ],
-            components: [
-              new MessageActionRow()
-                .addComponents(
-                  new MessageButton()
-                    .setCustomId('ticket-close')
-                    .setLabel('Close Ticket')
-                    .setStyle('DANGER')
-                    .setEmoji('🔒'),
-                ),
-            ],
-          });
-        }
-
-        if (guildData?.loggingEnabled && guildData.loggingChannel) {
-          const guild = interaction.guild as Guild;
-          const loggingChannel = guild.channels.cache.get(guildData.loggingChannel);
-          if (loggingChannel instanceof TextChannel) {
-            await loggingChannel.send({
-              embeds: [
-                new MessageEmbed()
-                  .setTitle(`${emoji.ticket} Ticket Opened`)
-                  .setColor(colors.invisible as ColorResolvable)
-                  .setDescription(`${user} opened a ticket \`#${newChannel.name}\`.`)
-                  .setTimestamp(),
-              ],
-            });
-          }
-        }
-      });
     }
   }
 }

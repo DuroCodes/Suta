@@ -20,6 +20,8 @@ export default new Route({
         ({ transcripts }) => transcripts?.find(({ name }) => name === channelId),
       )[0];
 
+      console.log(data);
+
       if (!transcript) return rep.code(404).send({ error: 'Channel not found' });
 
       rep.header('Content-Type', 'text/html');

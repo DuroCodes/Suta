@@ -50,7 +50,7 @@ export class UserClient extends SapphireClient {
 
   public async start(): Promise<void> {
     await this.login(env.DISCORD_TOKEN);
-    await startServer();
     await connectDB();
+    await startServer();
   }
 }

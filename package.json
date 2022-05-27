@@ -4,7 +4,7 @@
   "main": "./src/main.ts",
   "license": "MIT",
   "scripts": {
-    "start": "tsc && node dist/main.js"
+    "start": "tsc && ts-node src/main.ts"
   },
   "dependencies": {
     "@fastify/autoload": "^4.0.1",

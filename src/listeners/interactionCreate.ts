@@ -96,8 +96,8 @@ export class UserListener extends Listener {
                 .setTitle(`${emoji.ticket} Ticket Closed`)
                 .setColor(colors.invisible as ColorResolvable)
                 .setDescription(`\
-  ${user} closed the ticket \`#${(channel as TextChannel).name}\`.
-  To view the transcript, click [here](http://suta.tk/transcripts/${(channel as TextChannel).id}).`)
+${user} closed the ticket \`#${(channel as TextChannel).name}\`.
+To view the transcript, click [here](http://suta.tk/transcripts/${(channel as TextChannel).id}).`)
                 .setTimestamp(),
             ],
           }).catch(() => { });

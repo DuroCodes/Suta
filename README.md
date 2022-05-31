@@ -13,7 +13,7 @@
 - Customizable ticket system. ⚙️
 - Easy to use, easy to learn. 💪
 
-## **Notes:**
+## **Info:**
 
 - Feel free to use this bot in your own server, you can host it yourself if you chose to. 💻
 - You can view the documentation [here](https://docs.suta.tk). 📚

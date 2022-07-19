@@ -1,10 +1,10 @@
 {
   "name": "suta",
   "version": "1.0.0",
-  "main": "./src/main.ts",
+  "main": "./dist/main.js",
   "license": "MIT",
   "scripts": {
-    "start": "tsc && ts-node src/main.ts"
+    "start": "tsc && node dist/main.js"
   },
   "dependencies": {
     "@fastify/autoload": "^4.0.1",

@@ -27,7 +27,7 @@ import guildSchema from '../../typings/guild';
   fullCategory: ['Tickets'],
   runIn: ['GUILD_ANY'],
   enabled: true,
-  chatInputCommand: { register: true },
+  //chatInputCommand: { register: true },
 })
 
 export class UserCommand extends Command {

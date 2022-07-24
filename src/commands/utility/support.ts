@@ -16,7 +16,7 @@ import colors from '../../util/colors.json';
   fullCategory: ['Information', 'Utility'],
   runIn: ['GUILD_ANY'],
   enabled: true,
-  chatInputCommand: { register: true },
+  //chatInputCommand: { register: true },
 })
 
 export class UserCommand extends Command {

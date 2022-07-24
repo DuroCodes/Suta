@@ -12,7 +12,7 @@ import { env } from '../../lib';
   description: 'Evaluate code with Suta.',
   fullCategory: ['Utility', 'Administration'],
   enabled: true,
-  chatInputCommand: { register: true },
+  //chatInputCommand: { register: true },
 })
 
 export class UserCommand extends Command {

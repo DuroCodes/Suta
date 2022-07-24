@@ -20,7 +20,7 @@ import { TicketCategory } from '../../typings/category';
   fullCategory: ['Tickets'],
   runIn: ['GUILD_ANY'],
   enabled: true,
-  chatInputCommand: { register: true },
+  //chatInputCommand: { register: true },
 })
 
 export class UserCommand extends Command {

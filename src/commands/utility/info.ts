@@ -14,7 +14,7 @@ import formatBytes from '../../lib/formatBytes';
   description: 'Get information about the bot.',
   fullCategory: ['Information', 'Utility'],
   enabled: true,
-  chatInputCommand: { register: true },
+  //chatInputCommand: { register: true },
 })
 
 export class UserCommand extends Command {
